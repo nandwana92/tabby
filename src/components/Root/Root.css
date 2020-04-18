@@ -1,0 +1,156 @@
+body {
+  margin: 0;
+  font-family: 'Montserrat';
+}
+
+/* TODO: Get rid of the important here. */
+input {
+  font-family: 'Montserrat' !important;
+}
+
+.container {
+  position: fixed;
+  z-index: 999;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  visibility: hidden;
+  justify-content: center;
+  background-color: transparent;
+  transition-property: background-color visibility;
+  transition-duration: 0.1s;
+  transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+
+  &.visible {
+    visibility: visible;
+    background-color: rgba(0, 0, 0, 0.2);
+
+    .popup {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .popup {
+    margin-top: 128px;
+    align-self: flex-start;
+    width: 800px;
+    max-width: 90vw;
+    box-shadow: 20px 36px 36px 0px rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    border: 1px solid lightgray;
+    background-color: #ffffff;
+    padding: 12px;
+    opacity: 0.25;
+    transform: scale(0.98);
+    transition-property: opacity, transform;
+    transition-duration: 0.1s;
+    transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+
+    .input-container {
+      display: flex;
+      align-items: center;
+
+      input {
+        border: none;
+        font-size: 24px;
+        flex: auto;
+
+        &:focus {
+          outline: none;
+        }
+
+        &::placeholder {
+          color: darkgray;
+        }
+      }
+
+      .input-icon {
+        height: 32px;
+        margin-right: 12px;
+      }
+
+      .data-loaded {
+        border-bottom: 1px solid lightgray;
+        padding-bottom: 12px;
+      }
+    }
+
+    .tab-list {
+      list-style: none;
+
+      .item {
+        display: flex;
+        align-items: center;
+        padding: 4px 12px;
+        font-size: 14px;
+        border-radius: 4px;
+        transition-property: transform;
+
+        &:nth-child(odd) {
+          background-color: #f8f8f8;
+
+          button .list-item-icon-container {
+            border: 2px solid #f8f8f8;
+            background-color: #f8f8f8;
+          }
+
+          button:hover .list-item-icon-container {
+            border: 2px solid #428dff;
+            background-color: #e8e8e8;
+          }
+        }
+
+        &:nth-child(even) {
+          button:hover .list-item-icon-container {
+            border: 2px solid #428dff;
+            background-color: #e8e8e8;
+          }
+        }
+
+        button {
+          all: unset;
+        }
+
+        button {
+          &:focus .list-item-icon-container {
+            border: 2px solid #428dff;
+          }
+        }
+
+        .toggle-mute-button {
+          cursor: pointer;
+          margin-right: 12px;
+          transition-property: transform;
+          transition-duration: 0.2s;
+          transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+          transform: scale(1);
+
+          &:active {
+            transform: scale(0.9);
+          }
+        }
+
+        .list-item-icon-container {
+          padding: 5px;
+          box-sizing: content-box;
+          height: 18px;
+          width: 18px;
+          display: flex;
+          align-items: center;
+          border: 2px solid #ffffff;
+          border-radius: 8px;
+          background-color: #ffffff;
+          transition-property: background-color border;
+          transition-duration: 0.2s;
+          transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+          transform: scale(1);
+
+          .list-item-icon {
+            height: 18px;
+          }
+        }
+      }
+    }
+  }
+}

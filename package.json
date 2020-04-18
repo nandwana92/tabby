@@ -1,0 +1,32 @@
+{
+  "name": "tez",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "watch": "webpack --config webpack.config.js --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^16.9.34",
+    "@types/chrome": "0.0.104",
+    "@types/node": "^13.11.1",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "mini-css-extract-plugin": "^0.9.0",
+    "css-loader": "^3.5.2",
+    "postcss-loader": "^3.0.0",
+    "postcss-nested": "^4.2.1",
+    "ts-loader": "^6.2.2",
+    "tslint": "^6.1.1",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "classnames": "^2.2.6",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}
