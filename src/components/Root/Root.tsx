@@ -85,7 +85,7 @@ export default class Root extends React.Component<IRootProps, IRootState> {
 
       setTimeout(() => {
         node.focus();
-      }, 100);
+      }, 200);
     }
   }
 

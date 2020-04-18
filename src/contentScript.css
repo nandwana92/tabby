@@ -7,6 +7,9 @@
   height: 100vh;
   background-color: transparent;
   visibility: hidden;
+  transition-property: visibility;
+  transition-duration: 0.2s;
+  transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
 
   &.visible {
     visibility: visible;
