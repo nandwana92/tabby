@@ -16,6 +16,7 @@
 
 Clone the repo.
 In the root of the cloned repo run the following commands,
+
 `npm install`
 
 `npm run watch` This will keep the files in _dist_ directory updated.
