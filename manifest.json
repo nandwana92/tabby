@@ -8,7 +8,7 @@
     "scripts": ["dist/background.js"],
     "persistent": false
   },
-  "web_accessible_resources": ["images/*.svg", "tez.html"],
+  "web_accessible_resources": ["images/*.svg", "images/apps/*.svg", "tez.html"],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],

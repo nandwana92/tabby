@@ -1,0 +1,13 @@
+.container {
+  width: 20px;
+  display: flex;
+  flex-direction: column-reverse;
+
+  .bar {
+    background-color: #428dff;
+    transition-property: height opacity;
+    transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+  }
+}
