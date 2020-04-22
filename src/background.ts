@@ -41,7 +41,9 @@ chrome.runtime.onMessage.addListener(
       }
 
       case actionTypes.DISPATCH_TOGGLE_VISIBILITY: {
-        sendMessageToActiveTab({
+        const senderTabId = sender.tab.id;
+
+        chrome.tabs.sendMessage(senderTabId, {
           type: actionTypes.TOGGLE_VISIBILITY,
         });
       }

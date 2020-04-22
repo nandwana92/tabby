@@ -1,4 +1,8 @@
+import Fuse from 'fuse.js';
+import set from 'lodash/set';
+
 import { partialHostnameToFilenameMapping } from './constants';
+import { ITabWithHighlightedText } from './components/Root/Root';
 
 function getFilenameFromURL(url: string): string {
   const urlInstance = new URL(url);
@@ -26,4 +30,57 @@ function getWebsiteIconPathFromFilename(filename: string): string {
   return chrome.runtime.getURL(`images/apps/${filename}.svg`);
 }
 
-export { getFilenameFromURL, getWebsiteIconPathFromFilename };
+function generateHighlightedText(
+  inputText: string,
+  regions: ReadonlyArray<Fuse.RangeTuple> = [],
+  highlightClassName: string
+) {
+  let content = '';
+  let nextUnhighlightedRegionStartingIndex = 0;
+
+  regions.forEach((region) => {
+    const lastRegionNextIndex = region[1] + 1;
+
+    content += [
+      inputText.substring(nextUnhighlightedRegionStartingIndex, region[0]),
+      `<span class="${highlightClassName}">`,
+      inputText.substring(region[0], lastRegionNextIndex),
+      '</span>',
+    ].join('');
+
+    nextUnhighlightedRegionStartingIndex = lastRegionNextIndex;
+  });
+
+  content += inputText.substring(nextUnhighlightedRegionStartingIndex);
+
+  return content;
+}
+
+function highlight(
+  fuseSearchResults: Fuse.FuseResult<chrome.tabs.Tab>[],
+  highlightClassName: string
+): ITabWithHighlightedText[] {
+  return fuseSearchResults
+    .filter(({ matches }) => matches.length > 0)
+    .map(({ item, matches }) => {
+      const itemShallowCopy: ITabWithHighlightedText = {
+        ...item,
+      };
+
+      matches.forEach((match) => {
+        set(
+          itemShallowCopy,
+          `${match.key}Highlighted`,
+          generateHighlightedText(
+            match.value,
+            match.indices,
+            highlightClassName
+          )
+        );
+      });
+
+      return itemShallowCopy;
+    });
+}
+
+export { getFilenameFromURL, getWebsiteIconPathFromFilename, highlight };

@@ -1,11 +1,13 @@
 import React, { createRef } from 'react';
 import cx from 'classnames';
+import Fuse from 'fuse.js';
 
 import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
 import EqualizerVisualization from '../EqualizerVisualization/EqualizerVisualization';
 import {
   getFilenameFromURL,
   getWebsiteIconPathFromFilename,
+  highlight,
 } from './../../utils';
 import styles from './Root.css';
 import {
@@ -14,31 +16,44 @@ import {
   AUDIBLE_TABS_POLL_FREQUENCY_IN_MS,
 } from './../../constants';
 
+const fuseOptions = {
+  includeScore: true,
+  includeMatches: true,
+  keys: ['url', 'title'],
+};
+
+export interface ITabWithHighlightedText extends chrome.tabs.Tab {
+  titleHighlighted?: string;
+  urlHighlighted?: string;
+}
+
 export interface IRootProps {}
 
 export interface IRootState {
   isVisible: boolean;
-  audibleTabs: chrome.tabs.Tab[];
   showOnlyAudible: boolean;
+  searchInputValue: string;
+  tabs: chrome.tabs.Tab[];
 }
 
 export default class Root extends React.Component<IRootProps, IRootState> {
   private inputElementRef = createRef<HTMLInputElement>();
   private tab: chrome.tabs.Tab | null = null;
+  private pollingItervalId: NodeJS.Timeout | null = null;
 
   constructor(props: IRootProps) {
     super(props);
 
     this.state = {
       isVisible: false,
-      audibleTabs: [],
+      searchInputValue: '',
+      tabs: [],
       showOnlyAudible: false,
     };
 
     this.getParentTabId();
     this.registerListeners();
     this.findAudibleTabs();
-    this.pollAudibleTabs();
   }
 
   registerListeners() {
@@ -61,7 +76,7 @@ export default class Root extends React.Component<IRootProps, IRootState> {
 
         case actionTypes.GET_TABS_SUCCESS: {
           const { data: tabs } = request;
-          this.logAudibleTabsToConsole(tabs);
+          this.setTabsDataInState(tabs);
 
           break;
         }
@@ -86,20 +101,19 @@ export default class Root extends React.Component<IRootProps, IRootState> {
     chrome.runtime.sendMessage({ type: actionTypes.GET_ACTIVE_TAB_REQUEST });
   }
 
-  logAudibleTabsToConsole(tabs: chrome.tabs.Tab[]) {
-    const audibleTabs = tabs.filter((tab) => {
-      return true;
-    });
-
+  setTabsDataInState(tabs: chrome.tabs.Tab[]) {
     this.setState({
-      audibleTabs,
+      tabs,
     });
   }
 
-  pollAudibleTabs() {
-    setInterval(() => {
-      this.findAudibleTabs();
-    }, AUDIBLE_TABS_POLL_FREQUENCY_IN_MS);
+  startPollingAudibleTabs() {
+    this.findAudibleTabs();
+
+    this.pollingItervalId = setInterval(
+      this.findAudibleTabs,
+      AUDIBLE_TABS_POLL_FREQUENCY_IN_MS
+    );
   }
 
   findAudibleTabs() {
@@ -127,6 +141,9 @@ export default class Root extends React.Component<IRootProps, IRootState> {
       () => {
         if (this.state.isVisible) {
           this.focusPopupInput();
+          this.startPollingAudibleTabs();
+        } else {
+          clearInterval(this.pollingItervalId);
         }
       }
     );
@@ -170,6 +187,16 @@ export default class Root extends React.Component<IRootProps, IRootState> {
     }
   };
 
+  handleSearchInputChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
+    const element = e.target as HTMLInputElement;
+    const value = element.value;
+
+    // TODO: Handle sanitization of value, thing such as string trim, etc.
+    this.setState({
+      searchInputValue: value,
+    });
+  };
+
   handleAudibleOnlySwitchChange = (checked) => {
     this.setState({
       showOnlyAudible: checked,
@@ -177,9 +204,27 @@ export default class Root extends React.Component<IRootProps, IRootState> {
   };
 
   public render() {
-    const filteredList = this.state.audibleTabs.filter((item) => {
-      return this.state.showOnlyAudible ? item.audible : true;
-    });
+    const filteredTabs = this.state.showOnlyAudible
+      ? this.state.tabs.filter((tab) => {
+          return tab.audible;
+        })
+      : this.state.tabs;
+
+    const isSearchQueryPresent = this.state.searchInputValue.length > 0;
+    let fuseFuzzySearchResults: ITabWithHighlightedText[];
+
+    if (isSearchQueryPresent) {
+      const fuse = new Fuse(filteredTabs, fuseOptions);
+
+      fuseFuzzySearchResults = highlight(
+        fuse.search(this.state.searchInputValue),
+        styles['highlight']
+      );
+    } else {
+      fuseFuzzySearchResults = filteredTabs as ITabWithHighlightedText[];
+    }
+
+    const isFilterApplied = this.state.showOnlyAudible || isSearchQueryPresent;
 
     return (
       <div
@@ -191,12 +236,19 @@ export default class Root extends React.Component<IRootProps, IRootState> {
         ])}
       >
         <div className={styles['popup']}>
-          <div className={styles['input-container']}>
+          <div
+            className={cx(styles['input-container'], {
+              [styles['results-section-visible']]:
+                filteredTabs.length > 0 || isFilterApplied,
+            })}
+          >
             <img className={styles['input-icon']} src={iconUrls.search} />
             <input
+              onChange={this.handleSearchInputChange}
               ref={this.inputElementRef}
-              placeholder="Search (wip)"
+              placeholder="Search"
               type="text"
+              value={this.state.searchInputValue}
             />
             <ToggleSwitch
               className={styles['audible-only-switch']}
@@ -218,9 +270,10 @@ export default class Root extends React.Component<IRootProps, IRootState> {
               />
             </div>
           </div>
-          {filteredList.length > 0 ? (
+          {fuseFuzzySearchResults.length > 0 ? (
             <ul className={styles['tab-list']}>
-              {filteredList.map((item) => {
+              {fuseFuzzySearchResults.map((result) => {
+                const item = result;
                 const { muted } = item.mutedInfo;
                 const showAudibleIcon = item.audible;
                 const iconUrl = muted ? iconUrls.mute : iconUrls.volume;
@@ -232,6 +285,19 @@ export default class Root extends React.Component<IRootProps, IRootState> {
 
                 return (
                   <li key={item.id} className={styles['item']}>
+                    {showAudibleIcon ? (
+                      <button
+                        onClick={this.handleToggleMuteButtonClick(item)}
+                        className={styles['toggle-mute-button']}
+                      >
+                        <div className={styles['list-item-icon-container']}>
+                          <img
+                            className={styles['list-item-icon']}
+                            src={iconUrl}
+                          />
+                        </div>
+                      </button>
+                    ) : null}
                     <a
                       className={cx(styles['unstyled-anchor-tag'])}
                       href="#"
@@ -239,29 +305,39 @@ export default class Root extends React.Component<IRootProps, IRootState> {
                       role="button"
                       onClick={this.handleGoToTabButtonClick(item)}
                     >
-                      {showAudibleIcon ? (
-                        <button
-                          onClick={this.handleToggleMuteButtonClick(item)}
-                          className={styles['toggle-mute-button']}
-                        >
-                          <div className={styles['list-item-icon-container']}>
-                            <img
-                              className={styles['list-item-icon']}
-                              src={iconUrl}
-                            />
-                          </div>
-                        </button>
-                      ) : null}
                       <img
                         className={styles['website-icon']}
                         src={websiteIconFilePath}
                       />
-                      <span>{item.title}</span>
+                      <div className={styles['title-and-url-container']}>
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: item.titleHighlighted || item.title,
+                          }}
+                        ></div>
+                        <div
+                          className={cx(
+                            styles['tab-url'],
+                            styles['truncate-text']
+                          )}
+                          dangerouslySetInnerHTML={{
+                            __html: item.urlHighlighted || item.url,
+                          }}
+                        ></div>
+                      </div>
                     </a>
                   </li>
                 );
               })}
             </ul>
+          ) : isFilterApplied ? (
+            <div className={styles['no-results-found']}>
+              <img
+                className={styles['illustration']}
+                src={iconUrls.noResultsFound}
+              />
+              <div className={styles['text']}>no matching tabs found</div>
+            </div>
           ) : null}
         </div>
       </div>

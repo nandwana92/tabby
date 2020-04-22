@@ -17,6 +17,7 @@ export enum actionTypes {
 export const iconUrls = {
   search: chrome.runtime.getURL('images/loupe.svg'),
   mute: chrome.runtime.getURL('images/mute.svg'),
+  noResultsFound: chrome.runtime.getURL('images/desert.svg'),
   volume: chrome.runtime.getURL('images/volume.svg'),
 };
 
