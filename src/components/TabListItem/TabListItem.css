@@ -1,0 +1,155 @@
+.tab-list-item {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  position: relative;
+
+  button {
+    all: unset;
+  }
+
+  .toggle-mute-button {
+    position: absolute;
+    left: -40px;
+    cursor: pointer;
+    margin-right: 12px;
+    transition-property: transform;
+    transition-duration: 0.2s;
+    transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+    transform: scale(1);
+
+    &:active {
+      transform: scale(0.9);
+    }
+
+    .list-item-icon-container {
+      padding: 5px;
+      box-sizing: content-box;
+      height: 18px;
+      width: 18px;
+      display: flex;
+      align-items: center;
+      border: 2px solid #ffffff;
+      border-radius: 8px;
+      background-color: #ffffff;
+      transition-property: background-color border;
+      transition-duration: 0.2s;
+      transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+      transform: scale(1);
+
+      .list-item-icon {
+        height: 18px;
+      }
+    }
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    flex: auto;
+    overflow: hidden;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: 2px solid #ffffff;
+    transform: scale(1);
+    transition-property: transform border;
+    transition-duration: 0.2s;
+    transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+
+    &:active {
+      /*
+          Commenting out this styling for now as the parent element is also
+          becoming active when the child element is active. Because of this
+          even the parent element is scaling which isn't desired. This can
+          possibly be solved using JS. TODO: Explore the JS fix for this.
+
+          transform: scale(0.99);            
+        */
+    }
+
+    .title-and-url-container {
+      flex: auto;
+      overflow: hidden;
+
+      .tab-url {
+        font-size: 12px;
+        margin-top: 4px;
+        color: #551a8b;
+      }
+    }
+
+    .website-icon {
+      height: 24px;
+      margin-right: 12px;
+    }
+  }
+
+  &:nth-child(odd) {
+    a {
+      border: 2px solid #f8f8f8;
+      background-color: #f8f8f8;
+
+      &:focus {
+        border: 2px solid #428dff;
+      }
+    }
+
+    button .list-item-icon-container {
+      border: 2px solid #f8f8f8;
+      background-color: #f8f8f8;
+    }
+
+    button:hover .list-item-icon-container {
+      border: 2px solid #428dff;
+      background-color: #e8e8e8;
+    }
+
+    button:focus .list-item-icon-container {
+      border: 2px solid #428dff;
+    }
+  }
+
+  &:nth-child(even) {
+    a {
+      &:focus {
+        border: 2px solid #428dff;
+      }
+    }
+
+    button:hover .list-item-icon-container {
+      border: 2px solid #428dff;
+      background-color: #e8e8e8;
+    }
+
+    button:focus .list-item-icon-container {
+      border: 2px solid #428dff;
+    }
+  }
+}
+
+.unstyled-anchor-tag {
+  &:link,
+  &:visited {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: auto;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.anchor-tag-pointer-cursor {
+  &:link,
+  &:visited {
+    cursor: pointer;
+  }
+}
+
+.truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,0 +1,30 @@
+.toggle-switch {
+  margin-right: 12px;
+}
+
+.toggle-switch-label-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-self: stretch;
+  width: 140px;
+
+  .toggle-switch-label {
+    position: absolute;
+    text-transform: uppercase;
+  }
+
+  .equalizer-visualization {
+    position: absolute;
+    transition-property: opacity;
+    transition-duration: 0.2s;
+    transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+    opacity: 0;
+
+    &.visible {
+      opacity: 0.2;
+    }
+  }
+}

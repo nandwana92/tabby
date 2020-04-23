@@ -1,8 +1,9 @@
 import * as React from 'react';
 import cx from 'classnames';
 
+import VerticalBar from 'src/components/VerticalBar/VerticalBar';
+
 import styles from './EqualizerVisualization.css';
-import VerticalBar from '../VerticalBar/VerticalBar';
 
 // Separation between adjacent bars in pixels.
 const SEPARATION_BETWEEN_BARS = 2;

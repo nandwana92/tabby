@@ -1,0 +1,17 @@
+.no-results {
+  display: flex;
+  align-items: center;
+  padding-top: 24px;
+
+  .illustration {
+    opacity: 0.5;
+    height: 128px;
+  }
+
+  .text {
+    font-size: 20px;
+    flex: auto;
+    text-align: center;
+    color: darkgray;
+  }
+}

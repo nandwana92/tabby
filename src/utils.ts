@@ -1,8 +1,8 @@
 import Fuse from 'fuse.js';
 import set from 'lodash/set';
 
-import { partialHostnameToFilenameMapping } from './constants';
-import { ITabWithHighlightedText } from './components/Root/Root';
+import { partialHostnameToFilenameMapping } from 'src/constants';
+import { ITabWithHighlightedText } from 'src/types';
 
 function getFilenameFromURL(url: string): string {
   const urlInstance = new URL(url);

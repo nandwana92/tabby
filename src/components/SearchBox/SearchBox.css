@@ -1,0 +1,30 @@
+.search-box {
+  display: flex;
+  align-items: center;
+
+  .input {
+    font-size: 24px;
+    flex: auto;
+
+    &::placeholder {
+      color: darkgray;
+    }
+  }
+
+  .input-icon {
+    height: 32px;
+    margin-right: 12px;
+  }
+
+  .audible-only-switch {
+    margin-right: 12px;
+  }
+}
+
+.unstyled-input-element {
+  border: none;
+
+  &:focus {
+    outline: none;
+  }
+}

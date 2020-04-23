@@ -1,5 +1,5 @@
-import { actionTypes, keyboardShortcuts } from './constants';
-import { getActiveTab, sendMessageToActiveTab } from './backgroundUtils';
+import { actionTypes, keyboardShortcuts } from 'src/constants';
+import { getActiveTab, sendMessageToActiveTab } from 'src/backgroundUtils';
 
 chrome.commands.onCommand.addListener((command) => {
   switch (command) {

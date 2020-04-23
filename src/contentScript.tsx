@@ -1,5 +1,6 @@
+import { actionTypes, iFrameURL } from 'src/constants';
+
 import styles from './contentScript.css';
-import { actionTypes, iFrameURL } from './constants';
 
 class ChromeOnSteroids {
   private bodyElement: HTMLElement = document.body;

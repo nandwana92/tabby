@@ -1,6 +1,7 @@
 const path = require('path');
 const srcDir = './src';
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
   devtool: 'inline-source-map',
@@ -15,6 +16,7 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
+    plugins: [new TsconfigPathsPlugin()],
   },
   plugins: [
     new MiniCssExtractPlugin({
