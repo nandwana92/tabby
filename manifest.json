@@ -1,9 +1,9 @@
 {
   "name": "Tez",
-  "version": "1.0",
+  "version": "0.1",
   "description": "Supercharge your Chrome experience.",
   "manifest_version": 2,
-  "permissions": ["storage", "declarativeContent", "activeTab", "tabs"],
+  "permissions": ["activeTab", "tabs"],
   "background": {
     "scripts": ["dist/background.js"],
     "persistent": false
