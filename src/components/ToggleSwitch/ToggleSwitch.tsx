@@ -40,18 +40,22 @@ export default class ToggleSwitch extends React.Component<
 
   public render() {
     const { label, className } = this.props;
+
     return (
       <div className={className}>
-        <label className={styles['label']}>
-          <div className={styles['toggle']}>
-            <input
-              className={styles['toggle-state']}
-              type="checkbox"
-              name="check"
-              onChange={this.handleChange}
-              checked={this.state.checked}
-            />
-            <div className={styles['indicator']}></div>
+        <label className={styles['label']} htmlFor="checkbox">
+          <input
+            className={styles['toggle-state']}
+            type="checkbox"
+            name="checkbox"
+            id="checkbox"
+            onChange={this.handleChange}
+            checked={this.state.checked}
+          />
+          <div className={styles['toggle-container']}>
+            <div className={styles['toggle']}>
+              <div className={styles['indicator']}></div>
+            </div>
           </div>
           {label ? <div className={styles['label-text']}>{label}</div> : null}
         </label>

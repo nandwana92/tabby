@@ -9,6 +9,13 @@
   margin-left: 16px;
 }
 
+.toggle-container {
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 17px;
+  border-color: transparent;
+}
+
 .toggle {
   isolation: isolate;
   position: relative;
@@ -21,7 +28,8 @@
 }
 
 .toggle-state {
-  display: none;
+  position: absolute;
+  top: -100px;
 }
 
 .indicator {
@@ -36,7 +44,12 @@
   box-shadow: -8px -4px 8px 0px #ffffff, 8px 4px 12px 0px #d1d9e6;
 }
 
-.toggle-state:checked ~ .indicator {
+.toggle-state:checked ~ .toggle-container .indicator {
   background-color: #428dff;
   transform: translate3d(25%, 0, 0);
+}
+
+.toggle-state:focus ~ .toggle-container,
+.toggle-state:active ~ .toggle-container {
+  border-color: #428dff;
 }

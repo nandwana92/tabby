@@ -42,6 +42,7 @@ input {
     background-color: #ffffff;
     padding: 12px;
     opacity: 0;
+    overflow: hidden;
     transform: scale(0.95);
     transition-property: opacity, transform;
     transition-duration: 0.2s;
