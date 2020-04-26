@@ -57,9 +57,22 @@ export class SearchBox extends React.Component<TAllProps, ISearchBoxState> {
     ) {
       if (this.props.isChromeOnSteroidsVisible) {
         this.focusInput();
+      } else {
+        this.setState(
+          {
+            inputValue: '',
+          },
+          this.callOnSearchBoxInputChangeThrottled
+        );
       }
     }
   }
+
+  private callOnSearchBoxInputChangeThrottled = () => {
+    if (typeof this.onSearchBoxInputChangeThrottled === 'function') {
+      this.onSearchBoxInputChangeThrottled(this.state.inputValue);
+    }
+  };
 
   focusInput() {
     const node = this.inputElementRef.current;
@@ -90,11 +103,9 @@ export class SearchBox extends React.Component<TAllProps, ISearchBoxState> {
         if (trimmedNextValue !== trimmedPreviousValue) {
           // If after stripping the leading and trailing whitespace from the
           // previous and current value of the input, the comparison says there
-          // is change do something.
+          // is a change do something.
 
-          if (typeof this.onSearchBoxInputChangeThrottled === 'function') {
-            this.onSearchBoxInputChangeThrottled(this.state.inputValue);
-          }
+          this.callOnSearchBoxInputChangeThrottled();
         }
       }
     );
@@ -107,7 +118,11 @@ export class SearchBox extends React.Component<TAllProps, ISearchBoxState> {
       <div className={cx(styles['search-box'], className)}>
         <img className={styles['input-icon']} src={iconUrls.search} />
         <input
-          className={cx(styles['unstyled-input-element'], styles['input'])}
+          className={cx(
+            styles['unstyled-input-element'],
+            styles['input'],
+            'mousetrap'
+          )}
           onChange={this.handleSearchBoxInputChange}
           ref={this.inputElementRef}
           placeholder="Search"

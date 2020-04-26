@@ -36,6 +36,7 @@ class ChromeOnSteroids {
       this.bodyElement.classList.add(styles['overflow-hidden']);
     } else {
       this.bodyElement.classList.remove(styles['overflow-hidden']);
+      (document.activeElement as HTMLElement).blur();
     }
   }
 

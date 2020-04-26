@@ -57,7 +57,10 @@ export default class VerticalBar extends React.Component<
   }
 
   getRandomMaxHeight(from = this.props.startHeight, to = this.props.barHeight) {
-    return from + Math.floor(Math.random() * (to - from + 1));
+    return (
+      from +
+      Math.floor((Math.round(Math.random() * 1e1) / 1e1) * (to - from + 1))
+    );
   }
 
   public render() {

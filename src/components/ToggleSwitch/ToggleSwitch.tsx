@@ -1,4 +1,5 @@
 import * as React from 'react';
+import cx from 'classnames';
 
 import styles from './ToggleSwitch.css';
 
@@ -6,6 +7,7 @@ export interface IToggleSwitchProps {
   initialValue?: boolean;
   label?: string;
   className?: string;
+  identifier?: string;
   onChange?: (checked: boolean) => void;
 }
 
@@ -25,6 +27,17 @@ export default class ToggleSwitch extends React.Component<
     };
   }
 
+  componentDidUpdate() {
+    const { initialValue } = this.props;
+    const { checked } = this.state;
+
+    if (initialValue !== checked) {
+      this.setState({
+        checked: initialValue,
+      });
+    }
+  }
+
   handleChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
     this.setState(
       {
@@ -39,16 +52,16 @@ export default class ToggleSwitch extends React.Component<
   };
 
   public render() {
-    const { label, className } = this.props;
+    const { label, className, identifier = 'checkbox' } = this.props;
 
     return (
       <div className={className}>
-        <label className={styles['label']} htmlFor="checkbox">
+        <label className={styles['label']} htmlFor={identifier}>
           <input
-            className={styles['toggle-state']}
+            className={cx(styles['toggle-state'], 'mousetrap')}
             type="checkbox"
-            name="checkbox"
-            id="checkbox"
+            name={identifier}
+            id={identifier}
             onChange={this.handleChange}
             checked={this.state.checked}
           />

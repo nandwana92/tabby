@@ -1,5 +1,12 @@
 .tab-list {
+  position: relative;
   list-style: none;
   max-height: 300px;
   overflow: auto;
+
+  /* I haven't found a clean way to override the styling of a child component
+  from the parent yet. Using !important for now. I apologize. 😅 */
+  .highlighted {
+    border: 2px solid #428dff !important;
+  }
 }

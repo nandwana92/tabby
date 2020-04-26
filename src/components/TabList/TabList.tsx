@@ -1,34 +1,164 @@
-import * as React from 'react';
+import React, { createRef } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
+import cx from 'classnames';
+import Mousetrap from 'mousetrap';
 
-import { getFilenameFromURL, getWebsiteIconPathFromFilename } from 'src/utils';
+import {
+  getFilenameFromURL,
+  getWebsiteIconPathFromFilename,
+  handleGoToTabButtonClick,
+  handleToggleMuteButtonClick,
+} from 'src/utils';
 import { iconUrls } from 'src/constants';
 import TabListItem from 'src/components/TabListItem/TabListItem';
-import { ITabWithHighlightedText } from 'src/types';
+import { ITabWithHighlightedText, IAppState } from 'src/types';
 
 import styles from './TabList.css';
+
+const mapState = (state: IAppState) => ({
+  isChromeOnSteroidsVisible: state.isChromeOnSteroidsVisible,
+});
+
+const connector = connect(mapState, null);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export interface ITabListProps {
   listOfTabs: ITabWithHighlightedText[];
 }
 
-export interface ITabListState {}
+export interface ITabListState {
+  highlightedItemIndex: number;
+}
 
-export default class TabList extends React.Component<
-  ITabListProps,
-  ITabListState
-> {
-  constructor(props: ITabListProps) {
+type TAllProps = PropsFromRedux & ITabListProps;
+
+export class TabList extends React.Component<TAllProps, ITabListState> {
+  private ulElementRef = createRef<HTMLUListElement>();
+
+  constructor(props: TAllProps) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      highlightedItemIndex: 0,
+    };
   }
 
+  componentDidMount() {
+    this.registerKeyListeners();
+  }
+
+  componentDidUpdate(prevProps: TAllProps) {
+    if (prevProps.listOfTabs.length !== this.props.listOfTabs.length) {
+      this.setState({
+        highlightedItemIndex: 0,
+      });
+    }
+
+    if (
+      this.props.isChromeOnSteroidsVisible !==
+      prevProps.isChromeOnSteroidsVisible
+    ) {
+      if (this.props.isChromeOnSteroidsVisible) {
+        this.registerKeyListeners();
+      } else {
+        this.deregisterKeyListeners();
+      }
+    }
+  }
+
+  private registerKeyListeners() {
+    for (let i = 1; i < 10; i++) {
+      Mousetrap.bind(`shift+${i}`, this.handleToggleMuteButtonClick);
+    }
+
+    for (let i = 1; i < 10; i++) {
+      Mousetrap.bind(`option+${i}`, this.handleSwitchToTabKeyboardShortcut);
+    }
+
+    Mousetrap.bind('down', (e: ExtendedKeyboardEvent, combo: string) => {
+      e.preventDefault();
+      this.highlightNextItem();
+    });
+
+    Mousetrap.bind('up', (e: ExtendedKeyboardEvent, combo: string) => {
+      e.preventDefault();
+      this.highlightPrevousItem();
+    });
+
+    Mousetrap.bind('enter', (e: ExtendedKeyboardEvent, combo: string) => {
+      e.preventDefault();
+      const tab = this.props.listOfTabs[this.state.highlightedItemIndex];
+      handleGoToTabButtonClick(tab);
+    });
+  }
+
+  private deregisterKeyListeners() {
+    Mousetrap.unbind('up');
+    Mousetrap.unbind('down');
+    Mousetrap.unbind('enter');
+    for (let i = 1; i < 10; i++) {
+      Mousetrap.unbind(`shift+${i}`);
+    }
+    for (let i = 1; i < 10; i++) {
+      Mousetrap.unbind(`option+${i}`);
+    }
+  }
+
+  private handleToggleMuteButtonClick = (
+    e: ExtendedKeyboardEvent,
+    combo: string
+  ) => {
+    e.preventDefault();
+    const index = parseInt(combo.replace(/shift\+/g, ''), 10) - 1;
+
+    if (index < this.props.listOfTabs.length) {
+      const tab = this.props.listOfTabs[index];
+      handleToggleMuteButtonClick(tab);
+    }
+  };
+
+  private handleSwitchToTabKeyboardShortcut = (
+    e: ExtendedKeyboardEvent,
+    combo: string
+  ) => {
+    e.preventDefault();
+    const index = parseInt(combo.replace(/option\+/g, ''), 10) - 1;
+
+    if (index < this.props.listOfTabs.length) {
+      const tab = this.props.listOfTabs[index];
+      handleGoToTabButtonClick(tab);
+    }
+  };
+
+  private highlightNextItem = () => {
+    const { highlightedItemIndex } = this.state;
+    const { listOfTabs } = this.props;
+
+    if (highlightedItemIndex + 1 < listOfTabs.length) {
+      this.setState({
+        highlightedItemIndex: highlightedItemIndex + 1,
+      });
+    }
+  };
+
+  private highlightPrevousItem = () => {
+    const { highlightedItemIndex } = this.state;
+
+    if (highlightedItemIndex - 1 > -1) {
+      this.setState({
+        highlightedItemIndex: highlightedItemIndex - 1,
+      });
+    }
+  };
+
   public render() {
+    const { highlightedItemIndex } = this.state;
     const { listOfTabs } = this.props;
 
     return (
-      <ul className={styles['tab-list']}>
-        {listOfTabs.map((item) => {
+      <ul className={styles['tab-list']} ref={this.ulElementRef}>
+        {listOfTabs.map((item, index) => {
           const { muted } = item.mutedInfo;
           const showAudibleIcon = item.audible;
           const iconUrl = muted ? iconUrls.mute : iconUrls.volume;
@@ -40,6 +170,12 @@ export default class TabList extends React.Component<
 
           return (
             <TabListItem
+              className={cx({
+                [styles['highlighted']]: highlightedItemIndex === index,
+              })}
+              containerRef={this.ulElementRef}
+              index={index}
+              isHighlighted={highlightedItemIndex === index}
               key={item.id}
               showAudibleIcon={showAudibleIcon}
               item={item}
@@ -52,3 +188,5 @@ export default class TabList extends React.Component<
     );
   }
 }
+
+export default connector(TabList);

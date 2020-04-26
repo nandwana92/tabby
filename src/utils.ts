@@ -1,6 +1,7 @@
 import Fuse from 'fuse.js';
 import set from 'lodash/set';
 
+import { actionTypes } from 'src/constants';
 import { partialHostnameToFilenameMapping } from 'src/constants';
 import { ITabWithHighlightedText } from 'src/types';
 
@@ -83,4 +84,59 @@ function highlight(
     });
 }
 
-export { getFilenameFromURL, getWebsiteIconPathFromFilename, highlight };
+function handleToggleMuteButtonClick(tab: chrome.tabs.Tab) {
+  if (tab) {
+    const { audible } = tab;
+
+    if (!audible) {
+      return;
+    }
+
+    const { muted } = tab.mutedInfo;
+    const updatedMutedValue = !muted;
+
+    updateMutedState(tab.id, updatedMutedValue);
+  }
+}
+
+function updateMutedState(tabId: number, muted: boolean) {
+  chrome.runtime.sendMessage({
+    type: actionTypes.TOGGLE_MUTE,
+    tabId,
+    muted,
+  });
+}
+
+function handleGoToTabButtonClick(tab: chrome.tabs.Tab) {
+  dispatchToggleVisibilityAction();
+  setFocussedWindow(tab.windowId);
+  setActiveTab(tab.id);
+}
+
+function setFocussedWindow(windowId) {
+  chrome.runtime.sendMessage({
+    type: actionTypes.SET_FOCUSSED_WINDOW,
+    windowId,
+  });
+}
+
+function setActiveTab(tabId) {
+  chrome.runtime.sendMessage({
+    type: actionTypes.SET_ACTIVE_TAB,
+    tabId,
+  });
+}
+
+function dispatchToggleVisibilityAction() {
+  chrome.runtime.sendMessage({
+    type: actionTypes.DISPATCH_TOGGLE_VISIBILITY,
+  });
+}
+
+export {
+  getFilenameFromURL,
+  getWebsiteIconPathFromFilename,
+  highlight,
+  handleToggleMuteButtonClick,
+  handleGoToTabButtonClick,
+};

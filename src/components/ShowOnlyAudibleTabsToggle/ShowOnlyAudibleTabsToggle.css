@@ -16,6 +16,12 @@
     text-transform: uppercase;
   }
 
+  .keyboard-shortcut {
+    text-align: center;
+    margin-top: 4px;
+    font-size: 12px;
+  }
+
   .equalizer-visualization {
     position: absolute;
     transition-property: opacity;

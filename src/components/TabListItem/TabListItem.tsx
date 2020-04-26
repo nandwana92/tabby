@@ -1,7 +1,11 @@
-import * as React from 'react';
+import React, { createRef } from 'react';
 import cx from 'classnames';
 
 import { actionTypes } from 'src/constants';
+import {
+  handleGoToTabButtonClick,
+  handleToggleMuteButtonClick,
+} from 'src/utils';
 
 import styles from './TabListItem.css';
 
@@ -10,6 +14,11 @@ export interface ITabListItemProps {
   item: any;
   iconUrl: any;
   websiteIconFilePath: any;
+  isHighlighted: boolean;
+  containerRef: React.RefObject<HTMLElement>;
+  index?: number;
+  onFocus?: (node: HTMLLIElement) => void;
+  className?: string;
 }
 
 export interface ITabListItemState {}
@@ -18,61 +27,61 @@ export default class TabListItem extends React.Component<
   ITabListItemProps,
   ITabListItemState
 > {
+  private liElementRef = createRef<HTMLLIElement>();
+
   constructor(props: ITabListItemProps) {
     super(props);
 
     this.state = {};
   }
 
-  handleGoToTabButtonClick = (tab: chrome.tabs.Tab) => () => {
-    chrome.runtime.sendMessage({
-      type: actionTypes.SET_FOCUSSED_WINDOW,
-      windowId: tab.windowId,
-    });
-
-    this.setActiveTab(tab.id);
-    this.dispatchToggleVisibilityAction();
-  };
-
-  setActiveTab(tabId) {
-    chrome.runtime.sendMessage({
-      type: actionTypes.SET_ACTIVE_TAB,
-      tabId,
-    });
+  componentDidUpdate(prevProps: ITabListItemProps) {
+    if (!prevProps.isHighlighted && this.props.isHighlighted) {
+      this.scrollListItemIntoViewIfNeeded();
+    }
   }
 
-  dispatchToggleVisibilityAction() {
-    chrome.runtime.sendMessage({
-      type: actionTypes.DISPATCH_TOGGLE_VISIBILITY,
-    });
+  scrollListItemIntoViewIfNeeded() {
+    const node = this.liElementRef.current;
+    const containerNode = this.props.containerRef.current;
+
+    const containerTop = containerNode.scrollTop;
+    const containerBottom = containerTop + containerNode.clientHeight;
+
+    const nodeTop = node.offsetTop;
+    const nodeBottom = nodeTop + node.clientHeight;
+
+    if (nodeTop < containerTop) {
+      containerNode.scrollTop -= containerTop - nodeTop;
+    } else if (nodeBottom > containerBottom) {
+      containerNode.scrollTop += nodeBottom - containerBottom;
+    }
   }
 
   handleToggleMuteButtonClick = (tab) => (
     e: React.SyntheticEvent<HTMLElement>
   ) => {
     e.stopPropagation();
-
-    if (tab) {
-      const { muted } = tab.mutedInfo;
-      const updatedMutedValue = !muted;
-
-      this.updateMutedState(tab.id, updatedMutedValue);
-    }
+    handleToggleMuteButtonClick(tab);
   };
 
-  updateMutedState(tabId: number, muted: boolean) {
-    chrome.runtime.sendMessage({
-      type: actionTypes.TOGGLE_MUTE,
-      tabId,
-      muted,
-    });
-  }
-
   public render() {
-    const { showAudibleIcon, item, iconUrl, websiteIconFilePath } = this.props;
+    const {
+      showAudibleIcon,
+      item,
+      iconUrl,
+      websiteIconFilePath,
+      className,
+      index = -1,
+    } = this.props;
+
+    const showKeyboardShortcut = index > -1 && index < 9;
 
     return (
-      <li className={styles['tab-list-item']}>
+      <li
+        className={cx(styles['tab-list-item'], 'tab-list-item')}
+        ref={this.liElementRef}
+      >
         {showAudibleIcon ? (
           <button
             onClick={this.handleToggleMuteButtonClick(item)}
@@ -85,13 +94,16 @@ export default class TabListItem extends React.Component<
         ) : null}
         <a
           className={cx(
+            className,
             styles['unstyled-anchor-tag'],
             styles['anchor-tag-pointer-cursor']
           )}
           href="#"
-          tabIndex={0}
+          tabIndex={-1}
           role="button"
-          onClick={this.handleGoToTabButtonClick(item)}
+          onClick={() => {
+            handleGoToTabButtonClick(item);
+          }}
         >
           <img className={styles['website-icon']} src={websiteIconFilePath} />
           <div className={styles['title-and-url-container']}>
@@ -107,6 +119,11 @@ export default class TabListItem extends React.Component<
               }}
             ></div>
           </div>
+          {showKeyboardShortcut ? (
+            <React.Fragment>
+              <kbd>⌥</kbd> + <kbd>{index + 1}</kbd>
+            </React.Fragment>
+          ) : null}
         </a>
       </li>
     );
