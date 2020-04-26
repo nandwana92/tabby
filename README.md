@@ -2,15 +2,26 @@
 
 > [Chrome extension](https://www.link-to-be-updated.com) to add power-ups to Chrome.
 
-<img src="https://user-images.githubusercontent.com/36832784/79633261-f0dcfc00-8181-11ea-8b63-31a0f8d9ec46.png" width="512">
-
 ## Highlights
 
-- Quick access menu to mute/unmute audio in any tab across Chrome windows.
+- Gives a familiar macOS Spotlight like interface to quickly jump between tabs across windows.
+- Fuzzy search in all the open tabs across windows. Search on title and URL of the tabs.
+- Quickly mute-unmute tabs from a filtered down list of tabs which are audible.
+- Highly accessible. Completely navigable usable just your keyboard.
+- Keyboard shortcuts for switching to a tab, toggling mute of a tab, etc.
 
 ## Keyboard shortcuts
 
-- Toggle Tez Popup: <kbd>Ctrl+Shift+Space</kbd>
+- Toggle Tez Popup: <kbd>⌘+Shift+Space</kbd>
+- Toggle _audible tabs only_ view: <kbd>⌘+S</kbd>
+- Switch to tab n (1 - 9) in results: <kbd>⌥+[1-9]</kbd>
+- Toggle mute for tab n (1 - 9) in results: <kbd>Shift+[1-9]</kbd>
+
+## Screenshots
+
+<img src="https://user-images.githubusercontent.com/36832784/80314298-57ab8680-880e-11ea-8f9d-8e1a028bcdc4.png" width="512">
+<img src="https://user-images.githubusercontent.com/36832784/80314308-6a25c000-880e-11ea-8365-d65793971abb.png" width="512">
+<img src="https://user-images.githubusercontent.com/36832784/80314322-7dd12680-880e-11ea-8de9-26d28aa65257.png" width="512">
 
 ## Setup for local development
 
