@@ -1,6 +1,6 @@
 {
   "name": "Tez",
-  "version": "0.1",
+  "version": "0.1.0",
   "description": "Supercharge your Chrome experience.",
   "manifest_version": 2,
   "permissions": ["activeTab", "tabs"],
