@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import cx from 'classnames';
 
 import ToggleSwitch from 'src/components/ToggleSwitch/ToggleSwitch';
-import EqualizerVisualization from 'src/components/EqualizerVisualization/EqualizerVisualization';
+import AnotherEqualizerVisualization from 'src/components/AnotherEqualizerVisualization/AnotherEqualizerVisualization';
 import { IAppState } from 'src/types';
 import { updateShowAudibleTabsOnlyFlagValue } from 'src/actions';
 import {
@@ -88,15 +88,10 @@ export class ShowOnlyAudibleTabsToggle extends React.Component<
           onChange={updateShowAudibleTabsOnlyFlagValue}
         />
         <div className={styles['toggle-switch-label-container']}>
-          <EqualizerVisualization
+          <AnotherEqualizerVisualization
             className={cx(styles['equalizer-visualization'], {
               [styles['visible']]: showAudibleTabsOnly,
             })}
-            barWidth={8}
-            barHeight={32}
-            numberOfBars={10}
-            transitionDuration={250}
-            startHeight={10}
           />
           <div className={styles['toggle-switch-label']}>
             <div>{showOnlyAudibleTabsLabel}</div>

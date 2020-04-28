@@ -30,7 +30,7 @@
     opacity: 0;
 
     &.visible {
-      opacity: 0.2;
+      opacity: 0.1;
     }
   }
 }
