@@ -138,7 +138,7 @@ export class TabListItem extends React.Component<TAllProps, ITabListItemState> {
           </div>
           {showKeyboardShortcut ? (
             <React.Fragment>
-              <kbd>Space</kbd>+<kbd>{index + 1}</kbd>
+              <kbd>Shift</kbd>+<kbd>{index + 1}</kbd>
             </React.Fragment>
           ) : null}
         </a>
