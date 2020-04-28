@@ -23,6 +23,7 @@ export const iconUrls = {
 
 export enum keyboardShortcuts {
   TOGGLE_VISIBILITY = 'toggle-visibility',
+  JUMP_BACK_TO_PREVIOUS_TAB = 'jump-back-to-previous-tab',
 }
 
 export const AUDIBLE_TABS_POLL_FREQUENCY_IN_MS = 1000;

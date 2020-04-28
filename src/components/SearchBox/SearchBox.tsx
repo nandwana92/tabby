@@ -1,7 +1,7 @@
 import React, { createRef } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import cx from 'classnames';
-import throttle from 'lodash/throttle';
+import debounce from 'lodash/debounce';
 import { Cancelable } from 'lodash';
 
 import ShowOnlyAudibleTabsToggle from 'src/components/ShowOnlyAudibleTabsToggle/ShowOnlyAudibleTabsToggle';
@@ -31,7 +31,7 @@ type TAllProps = PropsFromRedux & ISearchBoxProps;
 
 export class SearchBox extends React.Component<TAllProps, ISearchBoxState> {
   private inputElementRef = createRef<HTMLInputElement>();
-  private onSearchBoxInputChangeThrottled:
+  private onSearchBoxInputChangeDebounced:
     | undefined
     | (((value: string) => void) & Cancelable);
 
@@ -39,9 +39,12 @@ export class SearchBox extends React.Component<TAllProps, ISearchBoxState> {
     super(props);
 
     if (typeof props.onSearchBoxInputChange === 'function') {
-      this.onSearchBoxInputChangeThrottled = throttle<(value: string) => void>(
+      this.onSearchBoxInputChangeDebounced = debounce<(value: string) => void>(
         props.onSearchBoxInputChange,
-        100
+        200,
+        {
+          leading: true,
+        }
       );
     }
 
@@ -62,15 +65,15 @@ export class SearchBox extends React.Component<TAllProps, ISearchBoxState> {
           {
             inputValue: '',
           },
-          this.callOnSearchBoxInputChangeThrottled
+          this.callOnSearchBoxInputChangeDebounced
         );
       }
     }
   }
 
-  private callOnSearchBoxInputChangeThrottled = () => {
-    if (typeof this.onSearchBoxInputChangeThrottled === 'function') {
-      this.onSearchBoxInputChangeThrottled(this.state.inputValue);
+  private callOnSearchBoxInputChangeDebounced = () => {
+    if (typeof this.onSearchBoxInputChangeDebounced === 'function') {
+      this.onSearchBoxInputChangeDebounced(this.state.inputValue);
     }
   };
 
@@ -105,7 +108,7 @@ export class SearchBox extends React.Component<TAllProps, ISearchBoxState> {
           // previous and current value of the input, the comparison says there
           // is a change do something.
 
-          this.callOnSearchBoxInputChangeThrottled();
+          this.callOnSearchBoxInputChangeDebounced();
         }
       }
     );

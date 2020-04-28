@@ -3,15 +3,17 @@ import cx from 'classnames';
 
 import { actionTypes } from 'src/constants';
 import {
-  handleGoToTabButtonClick,
+  jumpToTab,
   handleToggleMuteButtonClick,
+  dispatchToggleVisibilityAction,
 } from 'src/utils';
+import { ITabWithHighlightedText } from 'src/types';
 
 import styles from './TabListItem.css';
 
 export interface ITabListItemProps {
   showAudibleIcon: boolean;
-  item: any;
+  item: ITabWithHighlightedText;
   iconUrl: any;
   websiteIconFilePath: any;
   isHighlighted: boolean;
@@ -65,6 +67,13 @@ export default class TabListItem extends React.Component<
     handleToggleMuteButtonClick(tab);
   };
 
+  private handleClick = (tab: ITabWithHighlightedText) => () => {
+    const { id, windowId } = tab;
+
+    jumpToTab(id, windowId);
+    dispatchToggleVisibilityAction();
+  };
+
   public render() {
     const {
       showAudibleIcon,
@@ -101,9 +110,7 @@ export default class TabListItem extends React.Component<
           href="#"
           tabIndex={-1}
           role="button"
-          onClick={() => {
-            handleGoToTabButtonClick(item);
-          }}
+          onClick={this.handleClick(item)}
         >
           <img className={styles['website-icon']} src={websiteIconFilePath} />
           <div className={styles['title-and-url-container']}>

@@ -24,6 +24,13 @@
         "mac": "Command+Shift+Space"
       },
       "description": "Toggle Tez's visibility"
+    },
+    "jump-back-to-previous-tab": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+U",
+        "mac": "Command+Shift+U"
+      },
+      "description": "Jump back to previous tab"
     }
   },
   "page_action": {

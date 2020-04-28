@@ -3,8 +3,6 @@ import { actionTypes, iFrameURL } from 'src/constants';
 import styles from './contentScript.css';
 
 class ChromeOnSteroids {
-  private bodyElement: HTMLElement = document.body;
-  private headElement: HTMLElement = document.head;
   private chromeOnSteroidsRootElement: HTMLElement | null = null;
 
   constructor() {
@@ -33,9 +31,9 @@ class ChromeOnSteroids {
     );
 
     if (isChromeOnSteroidsVisible) {
-      this.bodyElement.classList.add(styles['overflow-hidden']);
+      document.body.classList.add(styles['overflow-hidden']);
     } else {
-      this.bodyElement.classList.remove(styles['overflow-hidden']);
+      document.body.classList.remove(styles['overflow-hidden']);
       (document.activeElement as HTMLElement).blur();
     }
   }

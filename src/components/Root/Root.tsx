@@ -55,15 +55,8 @@ export class Root extends React.Component<TAllProps, IRootState> {
   }
 
   componentDidUpdate(prevProps: TAllProps, prevState: IRootProps) {
-    if (
-      prevProps.isChromeOnSteroidsVisible !==
-      this.props.isChromeOnSteroidsVisible
-    ) {
-      if (this.props.isChromeOnSteroidsVisible) {
-        this.startPollingAudibleTabs();
-      } else {
-        clearInterval(this.pollingItervalId);
-      }
+    if (prevProps.showAudibleTabsOnly !== this.props.showAudibleTabsOnly) {
+      this.getTabs();
     }
   }
 
@@ -122,9 +115,9 @@ export class Root extends React.Component<TAllProps, IRootState> {
     return highlightedFuzzySearchResults;
   }
 
+  // TODO: This is an unused method. I am still not decided on whether polling
+  // is a good idea. So letting this stay for the time being. Decide on this soon.
   startPollingAudibleTabs() {
-    this.getTabs();
-
     this.pollingItervalId = setInterval(
       this.getTabs,
       AUDIBLE_TABS_POLL_FREQUENCY_IN_MS
@@ -145,12 +138,12 @@ export class Root extends React.Component<TAllProps, IRootState> {
   }
 
   onSearchBoxInputChange = (value) => {
-    this.setState({
-      searchInputValue: value,
-      highlightedFuzzySearchResults: this.getHighlightedFuzzySearchResults(
-        value
-      ),
-    });
+    this.setState(
+      {
+        searchInputValue: value,
+      },
+      this.getTabs
+    );
   };
 
   public render() {

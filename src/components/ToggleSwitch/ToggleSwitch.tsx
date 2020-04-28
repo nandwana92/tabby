@@ -1,5 +1,7 @@
 import * as React from 'react';
 import cx from 'classnames';
+import debounce from 'lodash/debounce';
+import { Cancelable } from 'lodash';
 
 import styles from './ToggleSwitch.css';
 
@@ -19,12 +21,26 @@ export default class ToggleSwitch extends React.Component<
   IToggleSwitchProps,
   IToggleSwitchState
 > {
+  private onChangeDebounced:
+    | undefined
+    | (((checked: boolean) => void) & Cancelable);
+
   constructor(props: IToggleSwitchProps) {
     super(props);
 
     this.state = {
       checked: !!props.initialValue,
     };
+
+    if (typeof props.onChange === 'function') {
+      this.onChangeDebounced = debounce<(checked: boolean) => void>(
+        props.onChange,
+        200,
+        {
+          leading: true,
+        }
+      );
+    }
   }
 
   componentDidUpdate() {
@@ -38,16 +54,18 @@ export default class ToggleSwitch extends React.Component<
     }
   }
 
-  handleChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
+  private callonChangeDebounced = () => {
+    if (typeof this.onChangeDebounced === 'function') {
+      this.onChangeDebounced(this.state.checked);
+    }
+  };
+
+  private handleChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
     this.setState(
       {
         checked: (e.target as HTMLInputElement).checked,
       },
-      () => {
-        if (typeof this.props.onChange === 'function') {
-          this.props.onChange(this.state.checked);
-        }
-      }
+      this.callonChangeDebounced
     );
   };
 

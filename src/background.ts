@@ -1,11 +1,31 @@
 import { actionTypes, keyboardShortcuts } from 'src/constants';
-import { getActiveTab, sendMessageToActiveTab } from 'src/backgroundUtils';
+import { sendMessageToActiveTab, getActiveTab } from 'src/backgroundUtils';
+
+let lastActiveTab: chrome.tabs.Tab | null = null;
+let currentlyActiveTab: chrome.tabs.Tab | null = null;
+let lastFocussedWindowId: number | null = null;
+let currentlyFocussedWindowId: number | null = null;
+let lastFocussedRealWindowId: number | null = null;
+let currentlyFocussedRealWindowId: number | null = null;
 
 chrome.commands.onCommand.addListener((command) => {
   switch (command) {
     case keyboardShortcuts.TOGGLE_VISIBILITY: {
       sendMessageToActiveTab({
         type: actionTypes.TOGGLE_VISIBILITY,
+      });
+
+      break;
+    }
+    case keyboardShortcuts.JUMP_BACK_TO_PREVIOUS_TAB: {
+      const { id: tabId, windowId } = lastActiveTab;
+
+      chrome.tabs.update(tabId, {
+        active: true,
+      });
+
+      chrome.windows.update(windowId, {
+        focused: true,
       });
 
       break;
@@ -132,3 +152,69 @@ chrome.tabs.onUpdated.addListener(
     });
   }
 );
+
+function updateLastActiveTab(tab: chrome.tabs.Tab) {
+  if (lastActiveTab === null) {
+    lastActiveTab = currentlyActiveTab = tab;
+  } else {
+    lastActiveTab = currentlyActiveTab;
+    currentlyActiveTab = tab;
+  }
+}
+
+function updateLastFocussedWindowId(windowId: number) {
+  if (lastFocussedWindowId === null) {
+    lastFocussedWindowId = currentlyFocussedWindowId = windowId;
+  } else {
+    lastFocussedWindowId = currentlyFocussedWindowId;
+    currentlyFocussedWindowId = windowId;
+  }
+}
+
+chrome.windows.onFocusChanged.addListener((windowId: number) => {
+  if (windowId !== chrome.windows.WINDOW_ID_NONE) {
+    getActiveTab().then((tab) => {
+      if (currentlyFocussedWindowId !== chrome.windows.WINDOW_ID_NONE) {
+        if (lastFocussedRealWindowId === null) {
+          lastFocussedRealWindowId = currentlyFocussedRealWindowId = windowId;
+        } else {
+          lastFocussedRealWindowId = currentlyFocussedRealWindowId;
+          currentlyFocussedRealWindowId = windowId;
+        }
+
+        updateLastActiveTab(tab);
+      } else {
+        if (tab.windowId !== lastFocussedWindowId) {
+          if (lastActiveTab === null) {
+            lastActiveTab = currentlyActiveTab = tab;
+          } else {
+            lastActiveTab = currentlyActiveTab;
+            currentlyActiveTab = tab;
+          }
+        }
+      }
+
+      updateLastFocussedWindowId(windowId);
+    });
+  } else {
+    updateLastFocussedWindowId(windowId);
+  }
+});
+
+chrome.tabs.onActivated.addListener((activeInfo) => {
+  const scopedCurrentlyActiveTab = currentlyActiveTab;
+
+  chrome.tabs.get(activeInfo.tabId, (tab) => {
+    if (lastActiveTab === null) {
+      lastActiveTab = currentlyActiveTab = tab;
+    } else {
+      const { windowId: lastFocussedRealWindowId } = scopedCurrentlyActiveTab;
+      const { windowId: currentlyFocussedRealWindowId } = tab;
+
+      if (lastFocussedRealWindowId === currentlyFocussedRealWindowId) {
+        lastActiveTab = currentlyActiveTab;
+        currentlyActiveTab = tab;
+      }
+    }
+  });
+});

@@ -6,7 +6,8 @@ import Mousetrap from 'mousetrap';
 import {
   getFilenameFromURL,
   getWebsiteIconPathFromFilename,
-  handleGoToTabButtonClick,
+  jumpToTab,
+  dispatchToggleVisibilityAction,
   handleToggleMuteButtonClick,
 } from 'src/utils';
 import { iconUrls } from 'src/constants';
@@ -89,7 +90,10 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
     Mousetrap.bind('enter', (e: ExtendedKeyboardEvent, combo: string) => {
       e.preventDefault();
       const tab = this.props.listOfTabs[this.state.highlightedItemIndex];
-      handleGoToTabButtonClick(tab);
+      const { id, windowId } = tab;
+
+      jumpToTab(id, windowId);
+      dispatchToggleVisibilityAction();
     });
   }
 
@@ -127,7 +131,10 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
 
     if (index < this.props.listOfTabs.length) {
       const tab = this.props.listOfTabs[index];
-      handleGoToTabButtonClick(tab);
+      const { id, windowId } = tab;
+
+      jumpToTab(id, windowId);
+      dispatchToggleVisibilityAction();
     }
   };
 

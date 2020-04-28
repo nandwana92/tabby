@@ -107,20 +107,19 @@ function updateMutedState(tabId: number, muted: boolean) {
   });
 }
 
-function handleGoToTabButtonClick(tab: chrome.tabs.Tab) {
-  dispatchToggleVisibilityAction();
-  setFocussedWindow(tab.windowId);
-  setActiveTab(tab.id);
+function jumpToTab(tabId: number, windowId: number) {
+  setFocussedWindow(windowId);
+  setActiveTab(tabId);
 }
 
-function setFocussedWindow(windowId) {
+function setFocussedWindow(windowId: number) {
   chrome.runtime.sendMessage({
     type: actionTypes.SET_FOCUSSED_WINDOW,
     windowId,
   });
 }
 
-function setActiveTab(tabId) {
+function setActiveTab(tabId: number) {
   chrome.runtime.sendMessage({
     type: actionTypes.SET_ACTIVE_TAB,
     tabId,
@@ -138,5 +137,6 @@ export {
   getWebsiteIconPathFromFilename,
   highlight,
   handleToggleMuteButtonClick,
-  handleGoToTabButtonClick,
+  dispatchToggleVisibilityAction,
+  jumpToTab,
 };
