@@ -11,9 +11,12 @@
   align-self: stretch;
   width: 140px;
 
-  .toggle-switch-label {
+  .toggle-switch-label-container {
     position: absolute;
-    text-transform: uppercase;
+
+    .toggle-switch-label {
+      text-transform: uppercase;
+    }
   }
 
   .keyboard-shortcut {

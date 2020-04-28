@@ -10,7 +10,7 @@ import {
   dispatchToggleVisibilityAction,
   handleToggleMuteButtonClick,
 } from 'src/utils';
-import { iconUrls } from 'src/constants';
+import { iconUrls, mousetrapKeyMappings, Keys, OS } from 'src/constants';
 import TabListItem from 'src/components/TabListItem/TabListItem';
 import { ITabWithHighlightedText, IAppState } from 'src/types';
 
@@ -18,6 +18,7 @@ import styles from './TabList.css';
 
 const mapState = (state: IAppState) => ({
   isChromeOnSteroidsVisible: state.isChromeOnSteroidsVisible,
+  platformInfo: state.platformInfo,
 });
 
 const connector = connect(mapState, null);
@@ -69,12 +70,17 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
   }
 
   private registerKeyListeners() {
+    const { platformInfo } = this.props;
+    const { os } = platformInfo;
+
     for (let i = 1; i < 10; i++) {
-      Mousetrap.bind(`shift+${i}`, this.handleToggleMuteButtonClick);
+      const key = `${mousetrapKeyMappings[Keys.OPTION][os]}+${i}`;
+
+      Mousetrap.bind(key, this.handleToggleMuteButtonClick);
     }
 
     for (let i = 1; i < 10; i++) {
-      Mousetrap.bind(`option+${i}`, this.handleSwitchToTabKeyboardShortcut);
+      Mousetrap.bind(`shift+${i}`, this.handleSwitchToTabKeyboardShortcut);
     }
 
     Mousetrap.bind('down', (e: ExtendedKeyboardEvent, combo: string) => {
@@ -98,14 +104,18 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
   }
 
   private deregisterKeyListeners() {
+    const { platformInfo } = this.props;
+    const { os } = platformInfo;
+
     Mousetrap.unbind('up');
     Mousetrap.unbind('down');
     Mousetrap.unbind('enter');
     for (let i = 1; i < 10; i++) {
-      Mousetrap.unbind(`shift+${i}`);
+      const key = `${mousetrapKeyMappings[Keys.OPTION][os]}+${i}`;
+      Mousetrap.unbind(key);
     }
     for (let i = 1; i < 10; i++) {
-      Mousetrap.unbind(`option+${i}`);
+      Mousetrap.unbind(`shift+${i}`);
     }
   }
 
@@ -114,7 +124,12 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
     combo: string
   ) => {
     e.preventDefault();
-    const index = parseInt(combo.replace(/shift\+/g, ''), 10) - 1;
+    const { platformInfo } = this.props;
+    const { os } = platformInfo;
+    const index =
+      os === OS.MAC
+        ? parseInt(combo.replace(/option\+/g, ''), 10) - 1
+        : parseInt(combo.replace(/alt\+/g, ''), 10) - 1;
 
     if (index < this.props.listOfTabs.length) {
       const tab = this.props.listOfTabs[index];
@@ -127,7 +142,7 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
     combo: string
   ) => {
     e.preventDefault();
-    const index = parseInt(combo.replace(/option\+/g, ''), 10) - 1;
+    const index = parseInt(combo.replace(/shift\+/g, ''), 10) - 1;
 
     if (index < this.props.listOfTabs.length) {
       const tab = this.props.listOfTabs[index];

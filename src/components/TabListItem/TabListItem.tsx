@@ -1,15 +1,24 @@
 import React, { createRef } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 import cx from 'classnames';
 
-import { actionTypes } from 'src/constants';
+import { Keys, keyLabels } from 'src/constants';
 import {
   jumpToTab,
   handleToggleMuteButtonClick,
   dispatchToggleVisibilityAction,
 } from 'src/utils';
-import { ITabWithHighlightedText } from 'src/types';
+import { ITabWithHighlightedText, IAppState } from 'src/types';
 
 import styles from './TabListItem.css';
+
+const mapState = (state: IAppState) => ({
+  platformInfo: state.platformInfo,
+});
+
+const connector = connect(mapState, null);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export interface ITabListItemProps {
   showAudibleIcon: boolean;
@@ -25,19 +34,18 @@ export interface ITabListItemProps {
 
 export interface ITabListItemState {}
 
-export default class TabListItem extends React.Component<
-  ITabListItemProps,
-  ITabListItemState
-> {
+type TAllProps = PropsFromRedux & ITabListItemProps;
+
+export class TabListItem extends React.Component<TAllProps, ITabListItemState> {
   private liElementRef = createRef<HTMLLIElement>();
 
-  constructor(props: ITabListItemProps) {
+  constructor(props: TAllProps) {
     super(props);
 
     this.state = {};
   }
 
-  componentDidUpdate(prevProps: ITabListItemProps) {
+  componentDidUpdate(prevProps: TAllProps) {
     if (!prevProps.isHighlighted && this.props.isHighlighted) {
       this.scrollListItemIntoViewIfNeeded();
     }
@@ -79,12 +87,14 @@ export default class TabListItem extends React.Component<
       showAudibleIcon,
       item,
       iconUrl,
+      platformInfo,
       websiteIconFilePath,
       className,
       index = -1,
     } = this.props;
 
     const showKeyboardShortcut = index > -1 && index < 9;
+    const { os } = platformInfo;
 
     return (
       <li
@@ -128,7 +138,7 @@ export default class TabListItem extends React.Component<
           </div>
           {showKeyboardShortcut ? (
             <React.Fragment>
-              <kbd>⌥</kbd> + <kbd>{index + 1}</kbd>
+              <kbd>Space</kbd>+<kbd>{index + 1}</kbd>
             </React.Fragment>
           ) : null}
         </a>
@@ -136,3 +146,5 @@ export default class TabListItem extends React.Component<
     );
   }
 }
+
+export default connector(TabListItem);

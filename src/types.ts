@@ -1,6 +1,7 @@
 export interface IAppState {
   showAudibleTabsOnly: boolean;
   isChromeOnSteroidsVisible: boolean;
+  platformInfo: chrome.runtime.PlatformInfo;
 }
 
 export interface ITabWithHighlightedText extends chrome.tabs.Tab {

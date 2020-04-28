@@ -1,6 +1,6 @@
 import {
-  actionTypes,
-  keyboardShortcuts,
+  ActionTypes,
+  KeyboardShortcuts,
   contentScriptInjectedPath,
 } from 'src/constants';
 import { sendMessageToActiveTab, getActiveTab } from 'src/backgroundUtils';
@@ -14,16 +14,16 @@ let currentlyFocussedRealWindowId: number | null = null;
 
 chrome.commands.onCommand.addListener((command) => {
   switch (command) {
-    case keyboardShortcuts.TOGGLE_VISIBILITY: {
+    case KeyboardShortcuts.TOGGLE_VISIBILITY: {
       sendMessageToActiveTab({
-        type: actionTypes.TOGGLE_VISIBILITY,
+        type: ActionTypes.TOGGLE_VISIBILITY,
       });
 
       injectContentScriptInActiveTab();
 
       break;
     }
-    case keyboardShortcuts.JUMP_BACK_TO_PREVIOUS_TAB: {
+    case KeyboardShortcuts.JUMP_BACK_TO_PREVIOUS_TAB: {
       const { id: tabId, windowId } = lastActiveTab;
 
       chrome.tabs.update(tabId, {
@@ -53,7 +53,7 @@ chrome.runtime.onMessage.addListener(
     const { type } = request;
 
     switch (type) {
-      case actionTypes.TOGGLE_MUTE: {
+      case ActionTypes.TOGGLE_MUTE: {
         const { tabId, muted } = request;
 
         chrome.tabs.update(
@@ -63,7 +63,7 @@ chrome.runtime.onMessage.addListener(
           },
           (tab) => {
             sendMessageToActiveTab({
-              type: actionTypes.MUTE_TOGGLED,
+              type: ActionTypes.MUTE_TOGGLED,
               data: tab,
             });
           }
@@ -72,7 +72,7 @@ chrome.runtime.onMessage.addListener(
         break;
       }
 
-      case actionTypes.DISPATCH_TOGGLE_VISIBILITY: {
+      case ActionTypes.DISPATCH_TOGGLE_VISIBILITY: {
         const senderTabId = sender.tab.id;
 
         chrome.tabs.executeScript(senderTabId, {
@@ -80,20 +80,20 @@ chrome.runtime.onMessage.addListener(
         });
       }
 
-      case actionTypes.GET_ACTIVE_TAB_REQUEST: {
-        if (sender.tab) {
-          sendMessageToActiveTab({
-            type: actionTypes.GET_ACTIVE_TAB_SUCCESS,
-            data: sender.tab,
+      case ActionTypes.GET_PLATFORM_INFO_REQUEST: {
+        const senderTabId = sender.tab.id;
+
+        chrome.runtime.getPlatformInfo((platformInfo) => {
+          chrome.tabs.sendMessage(senderTabId, {
+            type: ActionTypes.GET_PLATFORM_INFO_SUCCESS,
+            data: platformInfo,
           });
-        } else {
-          throw new Error('Sender is not a tab');
-        }
+        });
 
         break;
       }
 
-      case actionTypes.SET_FOCUSSED_WINDOW: {
+      case ActionTypes.SET_FOCUSSED_WINDOW: {
         const { windowId } = request;
 
         chrome.windows.update(
@@ -103,7 +103,7 @@ chrome.runtime.onMessage.addListener(
           },
           (window) => {
             sendMessageToActiveTab({
-              type: actionTypes.FOCUSSED_WINDOW_CHANGED,
+              type: ActionTypes.FOCUSSED_WINDOW_CHANGED,
               data: window,
             });
           }
@@ -112,7 +112,7 @@ chrome.runtime.onMessage.addListener(
         break;
       }
 
-      case actionTypes.SET_ACTIVE_TAB: {
+      case ActionTypes.SET_ACTIVE_TAB: {
         const { tabId } = request;
 
         chrome.tabs.update(
@@ -122,7 +122,7 @@ chrome.runtime.onMessage.addListener(
           },
           (tab) => {
             sendMessageToActiveTab({
-              type: actionTypes.ACTIVE_TAB_CHANGED,
+              type: ActionTypes.ACTIVE_TAB_CHANGED,
               data: tab,
             });
           }
@@ -131,10 +131,10 @@ chrome.runtime.onMessage.addListener(
         break;
       }
 
-      case actionTypes.GET_TABS_REQUEST: {
+      case ActionTypes.GET_TABS_REQUEST: {
         chrome.tabs.query({}, (tabs) => {
           sendMessageToActiveTab({
-            type: actionTypes.GET_TABS_SUCCESS,
+            type: ActionTypes.GET_TABS_SUCCESS,
             data: tabs,
           });
         });
@@ -155,7 +155,7 @@ chrome.tabs.onUpdated.addListener(
     tab: chrome.tabs.Tab
   ) => {
     sendMessageToActiveTab({
-      type: actionTypes.TAB_UPDATED,
+      type: ActionTypes.TAB_UPDATED,
       data: {
         tabId,
         changeInfo,

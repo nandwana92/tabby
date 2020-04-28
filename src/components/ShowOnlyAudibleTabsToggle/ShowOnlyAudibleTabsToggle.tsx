@@ -9,12 +9,15 @@ import { updateShowAudibleTabsOnlyFlagValue } from 'src/actions';
 import {
   showOnlyAudibleTabsLabel,
   showOnlyAudibleTabsIdentifer,
+  keyLabels,
+  Keys,
 } from 'src/constants';
 
 import styles from './ShowOnlyAudibleTabsToggle.css';
 
 const mapState = (state: IAppState) => ({
   showAudibleTabsOnly: state.showAudibleTabsOnly,
+  platformInfo: state.platformInfo,
   isChromeOnSteroidsVisible: state.isChromeOnSteroidsVisible,
 });
 
@@ -62,7 +65,7 @@ export class ShowOnlyAudibleTabsToggle extends React.Component<
   private registerKeyListeners() {
     const { updateShowAudibleTabsOnlyFlagValue } = this.props;
 
-    Mousetrap.bind('command+s', (e: ExtendedKeyboardEvent, combo: string) => {
+    Mousetrap.bind('mod+s', (e: ExtendedKeyboardEvent, combo: string) => {
       const { showAudibleTabsOnly } = this.props;
       e.preventDefault();
       updateShowAudibleTabsOnlyFlagValue(!showAudibleTabsOnly);
@@ -77,7 +80,10 @@ export class ShowOnlyAudibleTabsToggle extends React.Component<
     const {
       showAudibleTabsOnly,
       updateShowAudibleTabsOnlyFlagValue,
+      platformInfo,
     } = this.props;
+
+    const { os } = platformInfo;
 
     return (
       <React.Fragment>
@@ -93,10 +99,12 @@ export class ShowOnlyAudibleTabsToggle extends React.Component<
               [styles['visible']]: showAudibleTabsOnly,
             })}
           />
-          <div className={styles['toggle-switch-label']}>
-            <div>{showOnlyAudibleTabsLabel}</div>
+          <div className={styles['toggle-switch-label-container']}>
+            <div className={styles['toggle-switch-label']}>
+              {showOnlyAudibleTabsLabel}
+            </div>
             <div className={styles['keyboard-shortcut']}>
-              <kbd>⌘</kbd>+<kbd>S</kbd>
+              <kbd>{keyLabels[Keys.COMMAND][os]}</kbd>+<kbd>S</kbd>
             </div>
           </div>
         </div>

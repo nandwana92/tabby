@@ -1,7 +1,7 @@
 import Fuse from 'fuse.js';
 import set from 'lodash/set';
 
-import { actionTypes } from 'src/constants';
+import { ActionTypes } from 'src/constants';
 import { partialHostnameToFilenameMapping } from 'src/constants';
 import { ITabWithHighlightedText } from 'src/types';
 
@@ -101,7 +101,7 @@ function handleToggleMuteButtonClick(tab: chrome.tabs.Tab) {
 
 function updateMutedState(tabId: number, muted: boolean) {
   chrome.runtime.sendMessage({
-    type: actionTypes.TOGGLE_MUTE,
+    type: ActionTypes.TOGGLE_MUTE,
     tabId,
     muted,
   });
@@ -114,21 +114,21 @@ function jumpToTab(tabId: number, windowId: number) {
 
 function setFocussedWindow(windowId: number) {
   chrome.runtime.sendMessage({
-    type: actionTypes.SET_FOCUSSED_WINDOW,
+    type: ActionTypes.SET_FOCUSSED_WINDOW,
     windowId,
   });
 }
 
 function setActiveTab(tabId: number) {
   chrome.runtime.sendMessage({
-    type: actionTypes.SET_ACTIVE_TAB,
+    type: ActionTypes.SET_ACTIVE_TAB,
     tabId,
   });
 }
 
 function dispatchToggleVisibilityAction() {
   chrome.runtime.sendMessage({
-    type: actionTypes.DISPATCH_TOGGLE_VISIBILITY,
+    type: ActionTypes.DISPATCH_TOGGLE_VISIBILITY,
   });
 }
 

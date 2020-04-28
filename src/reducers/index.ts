@@ -5,15 +5,7 @@ import {
   UPDATE_SHOW_AUDIBLE_TABS_ONLY_FLAG_VALUE,
 } from 'src/types';
 
-const initialState: IAppState = {
-  showAudibleTabsOnly: false,
-  isChromeOnSteroidsVisible: false,
-};
-
-export function rootReducer(
-  state = initialState,
-  action: TAppActions
-): IAppState {
+export function rootReducer(state, action: TAppActions): IAppState {
   switch (action.type) {
     case UPDATE_SHOW_AUDIBLE_TABS_ONLY_FLAG_VALUE:
       const { payload: showAudibleTabsOnly } = action;

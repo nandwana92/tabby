@@ -10,7 +10,7 @@ import { updateIsChromeOnSteroidsVisibleFlagValue } from 'src/actions';
 import { IAppState, ITabWithHighlightedText } from 'src/types';
 import { highlight } from 'src/utils';
 import { fuseOptions } from 'src/config';
-import { actionTypes, AUDIBLE_TABS_POLL_FREQUENCY_IN_MS } from 'src/constants';
+import { ActionTypes, AUDIBLE_TABS_POLL_FREQUENCY_IN_MS } from 'src/constants';
 
 import styles from './Root.css';
 
@@ -76,13 +76,13 @@ export class Root extends React.Component<TAllProps, IRootState> {
       const { type } = request;
 
       switch (type) {
-        case actionTypes.TOGGLE_VISIBILITY: {
+        case ActionTypes.TOGGLE_VISIBILITY: {
           this.togglePopupContainerVisibility();
 
           break;
         }
 
-        case actionTypes.GET_TABS_SUCCESS: {
+        case ActionTypes.GET_TABS_SUCCESS: {
           const { data: tabs } = request;
           this.fuse = new Fuse(tabs, fuseOptions);
 
@@ -105,7 +105,7 @@ export class Root extends React.Component<TAllProps, IRootState> {
 
         // This is not being used right now, as the polling takes care of
         // updating the state.
-        case actionTypes.MUTE_TOGGLED: {
+        case ActionTypes.MUTE_TOGGLED: {
           const { data: tab } = request;
           this.getTabs();
 
@@ -136,7 +136,7 @@ export class Root extends React.Component<TAllProps, IRootState> {
   }
 
   getTabs() {
-    chrome.runtime.sendMessage({ type: actionTypes.GET_TABS_REQUEST });
+    chrome.runtime.sendMessage({ type: ActionTypes.GET_TABS_REQUEST });
   }
 
   togglePopupContainerVisibility() {

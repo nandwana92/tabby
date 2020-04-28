@@ -1,9 +1,11 @@
-export enum actionTypes {
+export enum ActionTypes {
   TOGGLE_VISIBILITY = 'TOGGLE_VISIBILITY',
   GET_TABS_REQUEST = 'GET_TABS_REQUEST',
   GET_TABS_SUCCESS = 'GET_TABS_SUCCESS',
   SET_FOCUSSED_WINDOW = 'SET_FOCUSSED_WINDOW',
   FOCUSSED_WINDOW_CHANGED = 'FOCUSSED_WINDOW_CHANGED',
+  GET_PLATFORM_INFO_REQUEST = 'GET_PLATFORM_INFO_REQUEST',
+  GET_PLATFORM_INFO_SUCCESS = 'GET_PLATFORM_INFO_SUCCESS',
   GET_ACTIVE_TAB_REQUEST = 'GET_ACTIVE_TAB_REQUEST',
   GET_ACTIVE_TAB_SUCCESS = 'GET_ACTIVE_TAB_SUCCESS',
   SET_ACTIVE_TAB = 'SET_ACTIVE_TAB',
@@ -21,7 +23,7 @@ export const iconUrls = {
   volume: chrome.runtime.getURL('images/volume.svg'),
 };
 
-export enum keyboardShortcuts {
+export enum KeyboardShortcuts {
   TOGGLE_VISIBILITY = 'toggle-visibility',
   JUMP_BACK_TO_PREVIOUS_TAB = 'jump-back-to-previous-tab',
 }
@@ -31,6 +33,44 @@ export const contentScriptInjectedPath = 'dist/contentScriptInjected.js';
 export const iFrameURL = chrome.runtime.getURL('tez.html');
 export const showOnlyAudibleTabsLabel = 'Audible tabs only';
 export const showOnlyAudibleTabsIdentifer = 'show-audible-tabs-only';
+
+export enum OS {
+  MAC = 'mac',
+  WIN = 'win',
+  ANDROID = 'android',
+  CROS = 'cros',
+  LINUX = 'linux',
+  OPENBSD = 'openbsd',
+}
+
+export enum Keys {
+  CTRL = 'Control',
+  OPTION = 'Option',
+  COMMAND = 'Command',
+  DELETE = 'Delete',
+  RETURN = 'Return',
+}
+
+export const mousetrapKeyMappings = {
+  [Keys.OPTION]: {
+    [OS.MAC]: 'option',
+    [OS.WIN]: 'alt',
+    [OS.LINUX]: 'alt',
+  },
+};
+
+export const keyLabels = {
+  [Keys.COMMAND]: {
+    [OS.MAC]: '⌘',
+    [OS.WIN]: 'Ctrl',
+    [OS.LINUX]: 'Ctrl',
+  },
+  [Keys.OPTION]: {
+    [OS.MAC]: '⌥',
+    [OS.WIN]: 'Alt',
+    [OS.LINUX]: 'Alt',
+  },
+};
 
 export const partialHostnameToFilenameMapping = {
   'airbnb.com': 'airbnb',

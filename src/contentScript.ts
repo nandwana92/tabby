@@ -1,4 +1,4 @@
-import { actionTypes, iFrameURL } from 'src/constants';
+import { ActionTypes, iFrameURL } from 'src/constants';
 
 import styles from './contentScript.css';
 
@@ -43,7 +43,7 @@ class ChromeOnSteroids {
       const { type } = request;
 
       switch (type) {
-        case actionTypes.TOGGLE_VISIBILITY:
+        case ActionTypes.TOGGLE_VISIBILITY:
           this.toggleRootVisibility();
 
           break;
