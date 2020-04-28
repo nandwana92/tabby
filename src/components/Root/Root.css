@@ -17,9 +17,11 @@ input {
   visibility: hidden;
   justify-content: center;
   background-color: transparent;
-  transition-property: background-color visibility;
+  /* TODO: Disabling the show and hide transitions as they feel laggy. Need to
+  investigate these and turn these back on. */
+  /* transition-property: background-color visibility;
   transition-duration: 0.2s;
-  transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67); */
 
   &.visible {
     visibility: visible;
@@ -44,9 +46,11 @@ input {
     opacity: 0;
     overflow: hidden;
     transform: scale(0.95);
-    transition-property: opacity, transform;
+    /* TODO: Disabling the show and hide transitions as they feel laggy. Need to
+    investigate these and turn these back on. */
+    /* transition-property: opacity, transform;
     transition-duration: 0.2s;
-    transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+    transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67); */
 
     .results-section-visible {
       border-bottom: 1px solid lightgray;

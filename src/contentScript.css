@@ -7,9 +7,11 @@
   height: 100vh;
   background-color: transparent;
   visibility: hidden;
-  transition-property: visibility;
+  /* TODO: Disabling the show and hide transitions as they feel laggy. Need to
+  investigate these and turn these back on. */
+  /* transition-property: visibility;
   transition-duration: 0.2s;
-  transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67); */
 
   &.visible {
     visibility: visible;
