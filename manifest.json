@@ -9,13 +9,6 @@
     "persistent": false
   },
   "web_accessible_resources": ["images/*.svg", "images/apps/*.svg", "tez.html"],
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["dist/contentScript.js"],
-      "css": ["dist/contentScript.css"]
-    }
-  ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "commands": {
     "toggle-visibility": {

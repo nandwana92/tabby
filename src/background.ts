@@ -1,4 +1,8 @@
-import { actionTypes, keyboardShortcuts } from 'src/constants';
+import {
+  actionTypes,
+  keyboardShortcuts,
+  contentScriptInjectedPath,
+} from 'src/constants';
 import { sendMessageToActiveTab, getActiveTab } from 'src/backgroundUtils';
 
 let lastActiveTab: chrome.tabs.Tab | null = null;
@@ -14,6 +18,8 @@ chrome.commands.onCommand.addListener((command) => {
       sendMessageToActiveTab({
         type: actionTypes.TOGGLE_VISIBILITY,
       });
+
+      injectContentScriptInActiveTab();
 
       break;
     }
@@ -35,6 +41,12 @@ chrome.commands.onCommand.addListener((command) => {
       break;
   }
 });
+
+function injectContentScriptInActiveTab() {
+  chrome.tabs.executeScript({
+    file: contentScriptInjectedPath,
+  });
+}
 
 chrome.runtime.onMessage.addListener(
   (request, sender: chrome.runtime.MessageSender) => {
@@ -63,8 +75,8 @@ chrome.runtime.onMessage.addListener(
       case actionTypes.DISPATCH_TOGGLE_VISIBILITY: {
         const senderTabId = sender.tab.id;
 
-        chrome.tabs.sendMessage(senderTabId, {
-          type: actionTypes.TOGGLE_VISIBILITY,
+        chrome.tabs.executeScript(senderTabId, {
+          file: contentScriptInjectedPath,
         });
       }
 

@@ -14,22 +14,17 @@ input {
   width: 100vw;
   height: 100vh;
   display: flex;
-  visibility: hidden;
   justify-content: center;
   background-color: transparent;
-  /* TODO: Disabling the show and hide transitions as they feel laggy. Need to
-  investigate these and turn these back on. */
-  /* transition-property: background-color visibility;
+  transition-property: background-color;
   transition-duration: 0.2s;
-  transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67); */
+  transition-timing-function: ease-in;
 
   &.visible {
-    visibility: visible;
     background-color: rgba(0, 0, 0, 0.2);
 
     .popup {
       opacity: 1;
-      transform: scale(1);
     }
   }
 
@@ -45,12 +40,10 @@ input {
     padding: 12px;
     opacity: 0;
     overflow: hidden;
-    transform: scale(0.95);
-    /* TODO: Disabling the show and hide transitions as they feel laggy. Need to
-    investigate these and turn these back on. */
-    /* transition-property: opacity, transform;
+    transition-property: opacity;
     transition-duration: 0.2s;
-    transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67); */
+    transition-timing-function: ease-in;
+    transition-delay: 0.1s;
 
     .results-section-visible {
       border-bottom: 1px solid lightgray;

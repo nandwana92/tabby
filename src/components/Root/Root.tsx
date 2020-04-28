@@ -54,6 +54,17 @@ export class Root extends React.Component<TAllProps, IRootState> {
     this.getTabs();
   }
 
+  componentDidMount() {
+    const { updateIsChromeOnSteroidsVisibleFlagValue } = this.props;
+
+    // TODO Not quite sure why this has to be done. But without causing this
+    // forced deferred execution, the invisible to visible CSS transitions
+    // aren't working. Need to investigate this.
+    setTimeout(() => {
+      updateIsChromeOnSteroidsVisibleFlagValue(true);
+    }, 0);
+  }
+
   componentDidUpdate(prevProps: TAllProps, prevState: IRootProps) {
     if (prevProps.showAudibleTabsOnly !== this.props.showAudibleTabsOnly) {
       this.getTabs();
