@@ -26,6 +26,11 @@
       "description": "Jump back to previous tab"
     }
   },
+  "icons": {
+    "16": "images/logo/bolt16.png",
+    "48": "images/logo/bolt48.png",
+    "128": "images/logo/bolt128.png"
+  },
   "page_action": {
     "default_popup": "popup.html",
     "default_icon": {
