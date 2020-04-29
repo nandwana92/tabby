@@ -5,23 +5,26 @@
 ## Highlights
 
 - Gives a familiar macOS Spotlight like interface to quickly jump between tabs across windows.
-- Fuzzy search in all the open tabs across windows. Search on title and URL of the tabs.
+- Jump to a tab and quickly return to where you were for replying that quick message or changing the song.
+- Fuzzy search in all the open tabs across windows. Search on the title or URL of the tabs.
 - Quickly mute-unmute tabs from a filtered down list of tabs which are audible.
 - Highly accessible. Completely navigable usable just your keyboard.
-- Keyboard shortcuts for switching to a tab, toggling mute of a tab, etc.
+- Keyboard shortcuts for switching to a tab, toggling mute of a tab, jumping back to the last tab, etc.
 
 ## Keyboard shortcuts
 
-- Toggle Tez Popup: <kbd>⌘+Shift+Space</kbd>
-- Toggle _audible tabs only_ view: <kbd>⌘+S</kbd>
-- Switch to tab n (1 - 9) in results: <kbd>⌥+[1-9]</kbd>
-- Toggle mute for tab n (1 - 9) in results: <kbd>Shift+[1-9]</kbd>
+| What?                                    	| How?                                                                                                      	|
+|------------------------------------------	|-----------------------------------------------------------------------------------------------------------	|
+| Toggle Tez Popup                         	|  <kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>Space</kbd> <br/>⊞ <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Space</kbd> 	|
+| Toggle _audible tabs only_ view          	|  <kbd>⌘</kbd>+<kbd>S</kbd> <br/>⊞ <kbd>Ctrl</kbd>+<kbd>S</kbd>                                           	|
+| Jump to last tab                         	|  <kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>U</kbd> <br/>⊞ <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>U</kbd>         	|
+| Switch to tab n (1 - 9) in results       	| <kbd>Shift</kbd>+<kbd>[1-9]</kbd>                                                                         	|
+| Toggle mute for tab n (1 - 9) in results 	|  <kbd>⌥</kbd>+<kbd>[1-9]</kbd> <br/>⊞ <kbd>Alt</kbd>+<kbd>[1-9]</kbd></kbd>                              	|
 
 ## Screenshots
 
-<img src="https://user-images.githubusercontent.com/36832784/80314298-57ab8680-880e-11ea-8f9d-8e1a028bcdc4.png" width="512">
-<img src="https://user-images.githubusercontent.com/36832784/80314308-6a25c000-880e-11ea-8365-d65793971abb.png" width="512">
-<img src="https://user-images.githubusercontent.com/36832784/80314322-7dd12680-880e-11ea-8de9-26d28aa65257.png" width="512">
+<img src="https://user-images.githubusercontent.com/36832784/80614638-5079b800-8a5c-11ea-90ea-e3e65111801b.png" width="512">
+<img src="https://user-images.githubusercontent.com/36832784/80614655-553e6c00-8a5c-11ea-8fc4-647099486ba3.png" width="512">
 
 ## Setup for local development
 
