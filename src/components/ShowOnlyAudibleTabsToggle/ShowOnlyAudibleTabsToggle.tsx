@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import cx from 'classnames';
+import Mousetrap from 'mousetrap';
 
 import ToggleSwitch from 'src/components/ToggleSwitch/ToggleSwitch';
 import AnotherEqualizerVisualization from 'src/components/AnotherEqualizerVisualization/AnotherEqualizerVisualization';

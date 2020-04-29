@@ -72,6 +72,10 @@
       flex: auto;
       overflow: hidden;
 
+      .highlight {
+        font-weight: 700;
+      }
+
       .tab-url {
         font-size: 12px;
         margin-top: 4px;

@@ -2,8 +2,12 @@ import Fuse from 'fuse.js';
 import set from 'lodash/set';
 
 import { ActionTypes } from 'src/constants';
-import { partialHostnameToFilenameMapping } from 'src/constants';
-import { ITabWithHighlightedText } from 'src/types';
+import {
+  Keys,
+  keyLabels,
+  partialHostnameToFilenameMapping,
+} from 'src/constants';
+import { IAppState } from 'src/types';
 
 function getFilenameFromURL(url: string): string {
   const urlInstance = new URL(url);
@@ -29,59 +33,6 @@ function getFilenameFromURL(url: string): string {
 
 function getWebsiteIconPathFromFilename(filename: string): string {
   return chrome.runtime.getURL(`images/apps/${filename}.svg`);
-}
-
-function generateHighlightedText(
-  inputText: string,
-  regions: ReadonlyArray<Fuse.RangeTuple> = [],
-  highlightClassName: string
-) {
-  let content = '';
-  let nextUnhighlightedRegionStartingIndex = 0;
-
-  regions.forEach((region) => {
-    const lastRegionNextIndex = region[1] + 1;
-
-    content += [
-      inputText.substring(nextUnhighlightedRegionStartingIndex, region[0]),
-      `<span class="${highlightClassName}">`,
-      inputText.substring(region[0], lastRegionNextIndex),
-      '</span>',
-    ].join('');
-
-    nextUnhighlightedRegionStartingIndex = lastRegionNextIndex;
-  });
-
-  content += inputText.substring(nextUnhighlightedRegionStartingIndex);
-
-  return content;
-}
-
-function highlight(
-  fuseSearchResults: Fuse.FuseResult<chrome.tabs.Tab>[],
-  highlightClassName: string
-): ITabWithHighlightedText[] {
-  return fuseSearchResults
-    .filter(({ matches }) => matches.length > 0)
-    .map(({ item, matches }) => {
-      const itemShallowCopy: ITabWithHighlightedText = {
-        ...item,
-      };
-
-      matches.forEach((match) => {
-        set(
-          itemShallowCopy,
-          `${match.key}Highlighted`,
-          generateHighlightedText(
-            match.value,
-            match.indices,
-            highlightClassName
-          )
-        );
-      });
-
-      return itemShallowCopy;
-    });
 }
 
 function handleToggleMuteButtonClick(tab: chrome.tabs.Tab) {
@@ -132,11 +83,96 @@ function dispatchToggleVisibilityAction() {
   });
 }
 
+function transformIntoFuseResultLikeShape<T>(items: T[]): Fuse.FuseResult<T>[] {
+  return items.map((item) => ({
+    item,
+    refIndex: -1,
+  }));
+}
+
+function getHighlightedHTMLStrings<T>(
+  fuseResult: Fuse.FuseResult<T>,
+  className: string = 'highlight'
+): Record<string, string> {
+  const matches: readonly Fuse.FuseResultMatch[] | undefined =
+    fuseResult.matches;
+  const result = {};
+
+  if (typeof matches === 'undefined') {
+    return result;
+  }
+
+  matches.forEach((match) => {
+    const { key, value, indices: regions } = match;
+    let htmlString = '';
+    let nextUnhighlightedRegionStartingIndex = 0;
+
+    regions.forEach((region) => {
+      const lastRegionNextIndex = region[1] + 1;
+
+      htmlString += [
+        value.substring(nextUnhighlightedRegionStartingIndex, region[0]),
+        `<span class="${className}">`,
+        value.substring(region[0], lastRegionNextIndex),
+        '</span>',
+      ].join('');
+
+      nextUnhighlightedRegionStartingIndex = lastRegionNextIndex;
+    });
+
+    htmlString += value.substring(nextUnhighlightedRegionStartingIndex);
+
+    result[key] = htmlString;
+  });
+
+  return result;
+}
+
+function getInitialReduxState(platformInfo): IAppState {
+  const { os } = platformInfo;
+
+  const keyboardShortcuts = [
+    {
+      label: `Toggle Tez's visibility`,
+      shortcut: `<kbd>${
+        keyLabels[Keys.COMMAND][os]
+      }</kbd>+<kbd>Shift</kbd>+<kbd>Space</kbd>`,
+    },
+    {
+      label: `Jump back to previous tab`,
+      shortcut: `<kbd>${
+        keyLabels[Keys.COMMAND][os]
+      }</kbd>+<kbd>Shift</kbd>+<kbd>U</kbd>`,
+    },
+    {
+      label: `Toggle <i>Audible Tabs Only</i> switch`,
+      shortcut: `<kbd>${keyLabels[Keys.COMMAND][os]}</kbd>+<kbd>S</kbd>`,
+    },
+    {
+      label: `Jump to nth tab in the results`,
+      shortcut: `<kbd>Shift</kbd>+<kbd>[1-9]</kbd>`,
+    },
+    {
+      label: `Toggle mute for nth tab in the results`,
+      shortcut: `<kbd>${keyLabels[Keys.OPTION][os]}</kbd>+<kbd>[1-9]</kbd>`,
+    },
+  ];
+
+  return {
+    showAudibleTabsOnly: false,
+    isChromeOnSteroidsVisible: false,
+    platformInfo,
+    keyboardShortcuts,
+  };
+}
+
 export {
   getFilenameFromURL,
   getWebsiteIconPathFromFilename,
-  highlight,
   handleToggleMuteButtonClick,
   dispatchToggleVisibilityAction,
   jumpToTab,
+  transformIntoFuseResultLikeShape,
+  getInitialReduxState,
+  getHighlightedHTMLStrings,
 };

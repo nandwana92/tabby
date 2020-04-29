@@ -1,14 +1,15 @@
 import React, { createRef } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import cx from 'classnames';
+import Fuse from 'fuse.js';
 
-import { Keys, keyLabels } from 'src/constants';
 import {
   jumpToTab,
   handleToggleMuteButtonClick,
   dispatchToggleVisibilityAction,
+  getHighlightedHTMLStrings,
 } from 'src/utils';
-import { ITabWithHighlightedText, IAppState } from 'src/types';
+import { IAppState } from 'src/types';
 
 import styles from './TabListItem.css';
 
@@ -22,7 +23,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export interface ITabListItemProps {
   showAudibleIcon: boolean;
-  item: ITabWithHighlightedText;
+  tabFuseResult: Fuse.FuseResult<chrome.tabs.Tab>;
   iconUrl: any;
   websiteIconFilePath: any;
   isHighlighted: boolean;
@@ -75,7 +76,7 @@ export class TabListItem extends React.Component<TAllProps, ITabListItemState> {
     handleToggleMuteButtonClick(tab);
   };
 
-  private handleClick = (tab: ITabWithHighlightedText) => () => {
+  private handleClick = (tab: chrome.tabs.Tab) => () => {
     const { id, windowId } = tab;
 
     jumpToTab(id, windowId);
@@ -85,16 +86,23 @@ export class TabListItem extends React.Component<TAllProps, ITabListItemState> {
   public render() {
     const {
       showAudibleIcon,
-      item,
+      tabFuseResult,
       iconUrl,
-      platformInfo,
       websiteIconFilePath,
       className,
       index = -1,
     } = this.props;
 
     const showKeyboardShortcut = index > -1 && index < 9;
-    const { os } = platformInfo;
+    const item = tabFuseResult.item;
+
+    const highlightedHTMLStrings = getHighlightedHTMLStrings(
+      tabFuseResult,
+      styles['highlight']
+    );
+
+    const title = highlightedHTMLStrings.title || item.title;
+    const url = highlightedHTMLStrings.url || item.url;
 
     return (
       <li
@@ -126,13 +134,13 @@ export class TabListItem extends React.Component<TAllProps, ITabListItemState> {
           <div className={styles['title-and-url-container']}>
             <div
               dangerouslySetInnerHTML={{
-                __html: item.titleHighlighted || item.title,
+                __html: title,
               }}
             ></div>
             <div
               className={cx(styles['tab-url'], styles['truncate-text'])}
               dangerouslySetInnerHTML={{
-                __html: item.urlHighlighted || item.url,
+                __html: url,
               }}
             ></div>
           </div>

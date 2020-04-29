@@ -7,6 +7,7 @@ import Root from 'src/components/Root/Root';
 import { ActionTypes } from 'src/constants';
 import { rootReducer } from 'src/reducers';
 import { IAppState, TAppActions } from 'src/types';
+import { getInitialReduxState } from 'src/utils';
 
 class Main {
   constructor() {
@@ -23,11 +24,10 @@ class Main {
       'chrome-on-steroids'
     );
 
-    const store = createStore<IAppState, TAppActions, {}, never>(rootReducer, {
-      showAudibleTabsOnly: false,
-      isChromeOnSteroidsVisible: false,
-      platformInfo,
-    });
+    const store = createStore<IAppState, TAppActions, {}, never>(
+      rootReducer,
+      getInitialReduxState(platformInfo)
+    );
 
     ReactDOM.render(
       <Provider store={store}>

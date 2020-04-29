@@ -1,0 +1,31 @@
+.keyboard-shortcuts {
+  position: relative;
+
+  .illustration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 256px;
+    opacity: 0.02;
+    transform: rotate(-20deg);
+  }
+
+  table {
+    margin: auto;
+    margin-top: 12px;
+    font-size: 14px;
+
+    .list-item {
+      td {
+        padding: 10px;
+        border-radius: 4px;
+      }
+
+      &:nth-child(odd) {
+        td {
+          background-color: #f8f8f8;
+        }
+      }
+    }
+  }
+}

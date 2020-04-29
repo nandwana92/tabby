@@ -3,14 +3,19 @@ import React from 'react';
 import cx from 'classnames';
 import Fuse from 'fuse.js';
 
+import KeyboardShortcuts from 'src/components/KeyboardShortcuts/KeyboardShortcuts';
 import NoResults from 'src/components/NoResults/NoResults';
 import TabList from 'src/components/TabList/TabList';
 import SearchBox from 'src/components/SearchBox/SearchBox';
 import { updateIsChromeOnSteroidsVisibleFlagValue } from 'src/actions';
-import { IAppState, ITabWithHighlightedText } from 'src/types';
-import { highlight } from 'src/utils';
+import { IAppState, ModeTypes } from 'src/types';
+import { transformIntoFuseResultLikeShape } from 'src/utils';
 import { fuseOptions } from 'src/config';
-import { ActionTypes, AUDIBLE_TABS_POLL_FREQUENCY_IN_MS } from 'src/constants';
+import {
+  ActionTypes,
+  AUDIBLE_TABS_POLL_FREQUENCY_IN_MS,
+  consoleCommands,
+} from 'src/constants';
 
 import styles from './Root.css';
 
@@ -33,12 +38,15 @@ type TAllProps = PropsFromRedux & IRootProps;
 
 export interface IRootState {
   searchInputValue: string;
-  tabs: chrome.tabs.Tab[];
-  highlightedFuzzySearchResults: ITabWithHighlightedText[];
+  modeType: ModeTypes;
+  tabs: Fuse.FuseResult<chrome.tabs.Tab>[];
+  fuzzySearchResults: Fuse.FuseResult<chrome.tabs.Tab>[];
+  consoleModeFuzzySearchResults: Fuse.FuseResult<string>[];
 }
 
 export class Root extends React.Component<TAllProps, IRootState> {
-  private fuse: Fuse<chrome.tabs.Tab, {}> = new Fuse([], fuseOptions);
+  private consoleModeFuse = new Fuse<string, {}>(consoleCommands);
+  private fuse = new Fuse<chrome.tabs.Tab, {}>([], fuseOptions);
   private pollingItervalId: NodeJS.Timeout | null = null;
 
   constructor(props: TAllProps) {
@@ -47,7 +55,9 @@ export class Root extends React.Component<TAllProps, IRootState> {
     this.state = {
       searchInputValue: '',
       tabs: [],
-      highlightedFuzzySearchResults: [],
+      modeType: ModeTypes.DEFAULT,
+      fuzzySearchResults: [],
+      consoleModeFuzzySearchResults: [],
     };
 
     this.registerListeners();
@@ -83,20 +93,26 @@ export class Root extends React.Component<TAllProps, IRootState> {
         }
 
         case ActionTypes.GET_TABS_SUCCESS: {
+          const { searchInputValue } = this.state;
           const { data: tabs } = request;
           this.fuse = new Fuse(tabs, fuseOptions);
 
           if (this.state.searchInputValue.trim() !== '') {
-            this.setState({
-              tabs,
-              highlightedFuzzySearchResults: this.getHighlightedFuzzySearchResults(
-                this.state.searchInputValue
-              ),
-            });
+            this.setState(
+              {
+                tabs: transformIntoFuseResultLikeShape(tabs),
+                fuzzySearchResults: this.fuse.search<chrome.tabs.Tab>(
+                  searchInputValue
+                ),
+              },
+              () => {
+                console.log(fuseOptions, this.state.fuzzySearchResults);
+              }
+            );
           } else {
             this.setState({
-              tabs,
-              highlightedFuzzySearchResults: [],
+              tabs: transformIntoFuseResultLikeShape(tabs),
+              fuzzySearchResults: [],
             });
           }
 
@@ -113,17 +129,6 @@ export class Root extends React.Component<TAllProps, IRootState> {
         }
       }
     });
-  }
-
-  getHighlightedFuzzySearchResults(pattern: string) {
-    const fuzzySearchResults = this.fuse.search<chrome.tabs.Tab>(pattern);
-
-    const highlightedFuzzySearchResults = highlight(
-      fuzzySearchResults,
-      styles['highlight']
-    );
-
-    return highlightedFuzzySearchResults;
   }
 
   // TODO: This is an unused method. I am still not decided on whether polling
@@ -149,32 +154,99 @@ export class Root extends React.Component<TAllProps, IRootState> {
   }
 
   onSearchBoxInputChange = (value) => {
+    const trimmedSearchInputValue = value.trim();
+    const startsWithRightAngleBracket =
+      trimmedSearchInputValue.indexOf('>') === 0;
+    const modeType = startsWithRightAngleBracket
+      ? ModeTypes.CONSOLE
+      : ModeTypes.DEFAULT;
+
     this.setState(
       {
         searchInputValue: value,
+        modeType,
       },
-      this.getTabs
+      () => {
+        if (this.state.modeType === ModeTypes.DEFAULT) {
+          this.getTabs();
+        } else {
+          const trimmedSearchInputValue = this.state.searchInputValue.trim();
+          const consoleModeSearchQuery = trimmedSearchInputValue.substring(1);
+          const consoleModeFuzzySearchResults = this.consoleModeFuse.search(
+            consoleModeSearchQuery
+          );
+
+          this.setState({
+            consoleModeFuzzySearchResults,
+          });
+        }
+      }
     );
   };
 
-  public render() {
-    const { showAudibleTabsOnly, isChromeOnSteroidsVisible } = this.props;
-    const isSearchQueryPresent = this.state.searchInputValue.trim().length > 0;
-    let listOfTabs: ITabWithHighlightedText[];
+  private getActualSearchQuery(): string {
+    const { modeType, searchInputValue } = this.state;
+    const trimmedSearchInputValue = searchInputValue.trim();
 
-    if (isSearchQueryPresent) {
-      listOfTabs = this.state.highlightedFuzzySearchResults;
+    if (modeType === ModeTypes.CONSOLE) {
+      const consoleModeSearchQuery = trimmedSearchInputValue.substring(1);
+
+      return consoleModeSearchQuery;
     } else {
-      listOfTabs = this.state.tabs as ITabWithHighlightedText[];
+      return trimmedSearchInputValue;
     }
+  }
 
-    listOfTabs = showAudibleTabsOnly
-      ? listOfTabs.filter((tab) => tab.audible)
-      : listOfTabs;
+  private areFiltersApplied(): boolean {
+    const { modeType } = this.state;
+    const { showAudibleTabsOnly } = this.props;
+    const actualSearchQuery = this.getActualSearchQuery();
 
-    const isListEmpty = listOfTabs.length === 0;
-    const isFilterApplied = showAudibleTabsOnly || isSearchQueryPresent;
-    const resultsSectionVisible = listOfTabs.length > 0 || isFilterApplied;
+    if (modeType === ModeTypes.CONSOLE) {
+      return actualSearchQuery.length > 0;
+    } else {
+      return actualSearchQuery.length > 0 || showAudibleTabsOnly;
+    }
+  }
+
+  private getResultsComponent(): React.ReactNode | null {
+    const { modeType } = this.state;
+    const areFiltersApplied = this.areFiltersApplied();
+    const actualSearchQuery = this.getActualSearchQuery();
+    const isSearchQueryPresent = actualSearchQuery.length > 0;
+
+    if (modeType === ModeTypes.CONSOLE) {
+      const { consoleModeFuzzySearchResults } = this.state;
+      const nonEmptyResults = consoleModeFuzzySearchResults.length > 0;
+
+      return nonEmptyResults ? (
+        <KeyboardShortcuts />
+      ) : areFiltersApplied ? (
+        <NoResults modeType={modeType} />
+      ) : null;
+    } else {
+      const { tabs, fuzzySearchResults } = this.state;
+      const { showAudibleTabsOnly } = this.props;
+
+      const filteredTabs = (isSearchQueryPresent
+        ? fuzzySearchResults
+        : tabs
+      ).filter((item) => !showAudibleTabsOnly || item.item.audible);
+
+      const nonEmptyResults = filteredTabs.length > 0;
+
+      return nonEmptyResults ? (
+        <TabList tabs={filteredTabs} />
+      ) : areFiltersApplied ? (
+        <NoResults modeType={modeType} />
+      ) : null;
+    }
+  }
+
+  public render() {
+    const { isChromeOnSteroidsVisible } = this.props;
+    const resultsComponent = this.getResultsComponent();
+    const resultsSectionVisible = resultsComponent !== null;
 
     return (
       <div
@@ -192,11 +264,7 @@ export class Root extends React.Component<TAllProps, IRootState> {
             })}
             onSearchBoxInputChange={this.onSearchBoxInputChange}
           />
-          {!isListEmpty ? (
-            <TabList listOfTabs={listOfTabs} />
-          ) : isFilterApplied ? (
-            <NoResults />
-          ) : null}
+          {resultsComponent}
         </div>
       </div>
     );

@@ -2,11 +2,17 @@ export interface IAppState {
   showAudibleTabsOnly: boolean;
   isChromeOnSteroidsVisible: boolean;
   platformInfo: chrome.runtime.PlatformInfo;
+  keyboardShortcuts: IShortcutItem[];
 }
 
-export interface ITabWithHighlightedText extends chrome.tabs.Tab {
-  titleHighlighted?: string;
-  urlHighlighted?: string;
+export interface IShortcutItem {
+  label: string;
+  shortcut: string;
+}
+
+export enum ModeTypes {
+  DEFAULT = 'DEFAULT',
+  CONSOLE = 'CONSOLE',
 }
 
 /**

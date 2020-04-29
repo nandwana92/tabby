@@ -2,6 +2,7 @@ import React, { createRef } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import cx from 'classnames';
 import Mousetrap from 'mousetrap';
+import Fuse from 'fuse.js';
 
 import {
   getFilenameFromURL,
@@ -12,7 +13,7 @@ import {
 } from 'src/utils';
 import { iconUrls, mousetrapKeyMappings, Keys, OS } from 'src/constants';
 import TabListItem from 'src/components/TabListItem/TabListItem';
-import { ITabWithHighlightedText, IAppState } from 'src/types';
+import { IAppState } from 'src/types';
 
 import styles from './TabList.css';
 
@@ -26,7 +27,7 @@ const connector = connect(mapState, null);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export interface ITabListProps {
-  listOfTabs: ITabWithHighlightedText[];
+  tabs: Fuse.FuseResult<chrome.tabs.Tab>[];
 }
 
 export interface ITabListState {
@@ -51,7 +52,7 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
   }
 
   componentDidUpdate(prevProps: TAllProps) {
-    if (prevProps.listOfTabs.length !== this.props.listOfTabs.length) {
+    if (prevProps.tabs.length !== this.props.tabs.length) {
       this.setState({
         highlightedItemIndex: 0,
       });
@@ -95,8 +96,8 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
 
     Mousetrap.bind('enter', (e: ExtendedKeyboardEvent, combo: string) => {
       e.preventDefault();
-      const tab = this.props.listOfTabs[this.state.highlightedItemIndex];
-      const { id, windowId } = tab;
+      const tab = this.props.tabs[this.state.highlightedItemIndex];
+      const { id, windowId } = tab.item;
 
       jumpToTab(id, windowId);
       dispatchToggleVisibilityAction();
@@ -131,9 +132,9 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
         ? parseInt(combo.replace(/option\+/g, ''), 10) - 1
         : parseInt(combo.replace(/alt\+/g, ''), 10) - 1;
 
-    if (index < this.props.listOfTabs.length) {
-      const tab = this.props.listOfTabs[index];
-      handleToggleMuteButtonClick(tab);
+    if (index < this.props.tabs.length) {
+      const tab = this.props.tabs[index];
+      handleToggleMuteButtonClick(tab.item);
     }
   };
 
@@ -144,9 +145,9 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
     e.preventDefault();
     const index = parseInt(combo.replace(/shift\+/g, ''), 10) - 1;
 
-    if (index < this.props.listOfTabs.length) {
-      const tab = this.props.listOfTabs[index];
-      const { id, windowId } = tab;
+    if (index < this.props.tabs.length) {
+      const tab = this.props.tabs[index];
+      const { id, windowId } = tab.item;
 
       jumpToTab(id, windowId);
       dispatchToggleVisibilityAction();
@@ -155,9 +156,9 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
 
   private highlightNextItem = () => {
     const { highlightedItemIndex } = this.state;
-    const { listOfTabs } = this.props;
+    const { tabs } = this.props;
 
-    if (highlightedItemIndex + 1 < listOfTabs.length) {
+    if (highlightedItemIndex + 1 < tabs.length) {
       this.setState({
         highlightedItemIndex: highlightedItemIndex + 1,
       });
@@ -176,11 +177,13 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
 
   public render() {
     const { highlightedItemIndex } = this.state;
-    const { listOfTabs } = this.props;
+    const { tabs } = this.props;
+    console.log(tabs);
 
     return (
       <ul className={styles['tab-list']} ref={this.ulElementRef}>
-        {listOfTabs.map((item, index) => {
+        {tabs.map((tab, index) => {
+          const item = tab.item;
           const { muted } = item.mutedInfo;
           const showAudibleIcon = item.audible;
           const iconUrl = muted ? iconUrls.mute : iconUrls.volume;
@@ -200,7 +203,7 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
               isHighlighted={highlightedItemIndex === index}
               key={item.id}
               showAudibleIcon={showAudibleIcon}
-              item={item}
+              tabFuseResult={tab}
               iconUrl={iconUrl}
               websiteIconFilePath={websiteIconFilePath}
             />

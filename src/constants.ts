@@ -1,3 +1,5 @@
+import { ModeTypes } from 'src/types';
+
 export enum ActionTypes {
   TOGGLE_VISIBILITY = 'TOGGLE_VISIBILITY',
   GET_TABS_REQUEST = 'GET_TABS_REQUEST',
@@ -19,6 +21,8 @@ export enum ActionTypes {
 export const iconUrls = {
   search: chrome.runtime.getURL('images/loupe.svg'),
   mute: chrome.runtime.getURL('images/mute.svg'),
+  fourOFour: chrome.runtime.getURL('images/404.svg'),
+  keyboard: chrome.runtime.getURL('images/keyboard.svg'),
   noResultsFound: chrome.runtime.getURL('images/desert.svg'),
   volume: chrome.runtime.getURL('images/volume.svg'),
 };
@@ -33,6 +37,7 @@ export const contentScriptInjectedPath = 'dist/contentScriptInjected.js';
 export const iFrameURL = chrome.runtime.getURL('tez.html');
 export const showOnlyAudibleTabsLabel = 'Audible tabs only';
 export const showOnlyAudibleTabsIdentifer = 'show-audible-tabs-only';
+export const consoleCommands = ['show-keyboard-shortcuts'];
 
 export enum OS {
   MAC = 'mac',
@@ -69,6 +74,17 @@ export const keyLabels = {
     [OS.MAC]: '⌥',
     [OS.WIN]: 'Alt',
     [OS.LINUX]: 'Alt',
+  },
+};
+
+export const noResultsContent = {
+  [ModeTypes.DEFAULT]: {
+    text: 'no matching tabs found',
+    iconUrl: iconUrls.noResultsFound,
+  },
+  [ModeTypes.CONSOLE]: {
+    text: 'invalid command',
+    iconUrl: iconUrls.fourOFour,
   },
 };
 

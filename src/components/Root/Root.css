@@ -71,11 +71,6 @@ input {
   text-overflow: ellipsis;
 }
 
-/* This class shouldn't be here. This is temporary. */
-.highlight {
-  font-weight: 700;
-}
-
 kbd {
   display: inline-block;
   border: 1px solid #ccc;
