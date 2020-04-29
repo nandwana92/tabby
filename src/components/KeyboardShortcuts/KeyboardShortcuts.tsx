@@ -10,7 +10,7 @@ const mapState = (state: IAppState) => ({
   keyboardShortcuts: state.keyboardShortcuts,
 });
 
-const connector = connect(mapState, null);
+const connector = connect(mapState);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

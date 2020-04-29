@@ -14,7 +14,7 @@ const mapState = (state: IAppState) => ({
   isChromeOnSteroidsVisible: state.isChromeOnSteroidsVisible,
 });
 
-const connector = connect(mapState, {});
+const connector = connect(mapState);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -77,7 +77,7 @@ export class SearchBox extends React.Component<TAllProps, ISearchBoxState> {
     }
   };
 
-  focusInput() {
+  private focusInput() {
     const node = this.inputElementRef.current;
 
     if (node) {
@@ -90,7 +90,9 @@ export class SearchBox extends React.Component<TAllProps, ISearchBoxState> {
     }
   }
 
-  handleSearchBoxInputChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
+  private handleSearchBoxInputChange = (
+    e: React.SyntheticEvent<HTMLInputElement>
+  ) => {
     const { onSearchBoxInputChange } = this.props;
     const element = e.target as HTMLInputElement;
     const inputValue = element.value;

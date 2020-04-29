@@ -22,7 +22,7 @@ const mapState = (state: IAppState) => ({
   platformInfo: state.platformInfo,
 });
 
-const connector = connect(mapState, null);
+const connector = connect(mapState);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

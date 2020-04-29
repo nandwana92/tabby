@@ -81,7 +81,7 @@ export class Root extends React.Component<TAllProps, IRootState> {
     }
   }
 
-  registerListeners() {
+  private registerListeners() {
     chrome.runtime.onMessage.addListener((request) => {
       const { type } = request;
 
@@ -133,18 +133,18 @@ export class Root extends React.Component<TAllProps, IRootState> {
 
   // TODO: This is an unused method. I am still not decided on whether polling
   // is a good idea. So letting this stay for the time being. Decide on this soon.
-  startPollingAudibleTabs() {
+  private startPollingAudibleTabs() {
     this.pollingItervalId = setInterval(
       this.getTabs,
       AUDIBLE_TABS_POLL_FREQUENCY_IN_MS
     );
   }
 
-  getTabs() {
+  private getTabs() {
     chrome.runtime.sendMessage({ type: ActionTypes.GET_TABS_REQUEST });
   }
 
-  togglePopupContainerVisibility() {
+  private togglePopupContainerVisibility() {
     const {
       updateIsChromeOnSteroidsVisibleFlagValue,
       isChromeOnSteroidsVisible,
@@ -153,7 +153,7 @@ export class Root extends React.Component<TAllProps, IRootState> {
     updateIsChromeOnSteroidsVisibleFlagValue(!isChromeOnSteroidsVisible);
   }
 
-  onSearchBoxInputChange = (value) => {
+  private onSearchBoxInputChange = (value: string) => {
     const trimmedSearchInputValue = value.trim();
     const startsWithRightAngleBracket =
       trimmedSearchInputValue.indexOf('>') === 0;

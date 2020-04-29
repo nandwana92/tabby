@@ -17,15 +17,15 @@ const mapState = (state: IAppState) => ({
   platformInfo: state.platformInfo,
 });
 
-const connector = connect(mapState, null);
+const connector = connect(mapState);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export interface ITabListItemProps {
   showAudibleIcon: boolean;
   tabFuseResult: Fuse.FuseResult<chrome.tabs.Tab>;
-  iconUrl: any;
-  websiteIconFilePath: any;
+  iconUrl: string;
+  websiteIconFilePath: string;
   isHighlighted: boolean;
   containerRef: React.RefObject<HTMLElement>;
   index?: number;
@@ -52,7 +52,7 @@ export class TabListItem extends React.Component<TAllProps, ITabListItemState> {
     }
   }
 
-  scrollListItemIntoViewIfNeeded() {
+  private scrollListItemIntoViewIfNeeded() {
     const node = this.liElementRef.current;
     const containerNode = this.props.containerRef.current;
 
@@ -69,7 +69,7 @@ export class TabListItem extends React.Component<TAllProps, ITabListItemState> {
     }
   }
 
-  handleToggleMuteButtonClick = (tab) => (
+  private handleToggleMuteButtonClick = (tab: chrome.tabs.Tab) => (
     e: React.SyntheticEvent<HTMLElement>
   ) => {
     e.stopPropagation();
@@ -101,8 +101,8 @@ export class TabListItem extends React.Component<TAllProps, ITabListItemState> {
       styles['highlight']
     );
 
-    const title = highlightedHTMLStrings.title || item.title;
-    const url = highlightedHTMLStrings.url || item.url;
+    const title = highlightedHTMLStrings.title || item.title || '';
+    const url = highlightedHTMLStrings.url || item.url || '';
 
     return (
       <li

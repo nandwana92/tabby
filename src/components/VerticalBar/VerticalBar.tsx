@@ -31,7 +31,7 @@ export default class VerticalBar extends React.Component<
     this.updateHeightAtEveryInterval();
   }
 
-  updateHeightAtEveryInterval() {
+  private updateHeightAtEveryInterval() {
     setInterval(() => {
       const updatedHeight = this.forwardCycle
         ? this.getRandomMaxHeight()
@@ -56,7 +56,10 @@ export default class VerticalBar extends React.Component<
     }, this.props.transitionDuration);
   }
 
-  getRandomMaxHeight(from = this.props.startHeight, to = this.props.barHeight) {
+  private getRandomMaxHeight(
+    from = this.props.startHeight,
+    to = this.props.barHeight
+  ) {
     return (
       from +
       Math.floor((Math.round(Math.random() * 1e1) / 1e1) * (to - from + 1))
