@@ -43,5 +43,7 @@ if (chromeOnSteroidsIframeContainer === null) {
     'chromeOnSteroidsBodyStyleOverflow'
   );
 
-  document.body.style.overflow = chromeOnSteroidsBodyStyleOverflow;
+  if (typeof chromeOnSteroidsBodyStyleOverflow === 'string') {
+    document.body.style.overflow = chromeOnSteroidsBodyStyleOverflow;
+  }
 }

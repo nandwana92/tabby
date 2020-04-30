@@ -29,7 +29,7 @@ export default class ToggleSwitch extends React.Component<
     super(props);
 
     this.state = {
-      checked: !!props.initialValue,
+      checked: props.initialValue === true,
     };
 
     if (typeof props.onChange === 'function') {
@@ -44,7 +44,7 @@ export default class ToggleSwitch extends React.Component<
   }
 
   componentDidUpdate() {
-    const { initialValue } = this.props;
+    const { initialValue = false } = this.props;
     const { checked } = this.state;
 
     if (initialValue !== checked) {

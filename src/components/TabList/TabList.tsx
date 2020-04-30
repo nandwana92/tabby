@@ -99,6 +99,10 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
       const tab = this.props.tabs[this.state.highlightedItemIndex];
       const { id, windowId } = tab.item;
 
+      if (typeof id === 'undefined') {
+        return;
+      }
+
       jumpToTab(id, windowId);
       dispatchToggleVisibilityAction();
     });
@@ -149,6 +153,10 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
       const tab = this.props.tabs[index];
       const { id, windowId } = tab.item;
 
+      if (typeof id === 'undefined') {
+        return;
+      }
+
       jumpToTab(id, windowId);
       dispatchToggleVisibilityAction();
     }
@@ -178,14 +186,13 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
   public render() {
     const { highlightedItemIndex } = this.state;
     const { tabs } = this.props;
-    console.log(tabs);
 
     return (
       <ul className={styles['tab-list']} ref={this.ulElementRef}>
         {tabs.map((tab, index) => {
           const item = tab.item;
-          const { muted } = item.mutedInfo;
-          const showAudibleIcon = item.audible;
+          const muted = item.mutedInfo?.muted === true;
+          const showAudibleIcon = item.audible === true;
           const iconUrl = muted ? iconUrls.mute : iconUrls.volume;
           const websiteIconFilename = getFilenameFromURL(item.url);
           const websiteIconFilePath =

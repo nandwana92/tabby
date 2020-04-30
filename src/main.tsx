@@ -6,7 +6,7 @@ import { createStore } from 'redux';
 import Root from 'src/components/Root/Root';
 import { ActionTypes } from 'src/constants';
 import { rootReducer } from 'src/reducers';
-import { IAppState, TAppActions } from 'src/types';
+import { IAppState, AppActions } from 'src/types';
 import { getInitialReduxState } from 'src/utils';
 
 class Main {
@@ -24,7 +24,7 @@ class Main {
       'chrome-on-steroids'
     );
 
-    const store = createStore<IAppState, TAppActions, {}, never>(
+    const store = createStore<IAppState, AppActions, {}, never>(
       rootReducer,
       getInitialReduxState(platformInfo)
     );

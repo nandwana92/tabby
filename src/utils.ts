@@ -5,11 +5,16 @@ import { ActionTypes } from 'src/constants';
 import {
   Keys,
   keyLabels,
+  defaultFilename,
   partialHostnameToFilenameMapping,
 } from 'src/constants';
 import { IAppState } from 'src/types';
 
-function getFilenameFromURL(url: string): string {
+function getFilenameFromURL(url?: string): string {
+  if (typeof url === 'undefined') {
+    return defaultFilename;
+  }
+
   const urlInstance = new URL(url);
   const hostname = urlInstance.hostname;
 
@@ -28,7 +33,7 @@ function getFilenameFromURL(url: string): string {
     }
   }
 
-  return 'default';
+  return defaultFilename;
 }
 
 function getWebsiteIconPathFromFilename(filename: string): string {
@@ -37,24 +42,23 @@ function getWebsiteIconPathFromFilename(filename: string): string {
 
 function handleToggleMuteButtonClick(tab: chrome.tabs.Tab) {
   if (tab) {
-    const { audible } = tab;
+    const { audible, id } = tab;
 
-    if (!audible) {
+    if (typeof id === 'undefined' || typeof audible === 'undefined') {
       return;
     }
 
-    const { muted } = tab.mutedInfo;
+    const muted = tab.mutedInfo?.muted === true;
     const updatedMutedValue = !muted;
 
-    updateMutedState(tab.id, updatedMutedValue);
+    updateMutedState(id, updatedMutedValue);
   }
 }
 
 function updateMutedState(tabId: number, muted: boolean) {
   chrome.runtime.sendMessage({
     type: ActionTypes.TOGGLE_MUTE,
-    tabId,
-    muted,
+    data: { tabId, muted },
   });
 }
 
@@ -66,14 +70,14 @@ function jumpToTab(tabId: number, windowId: number) {
 function setFocussedWindow(windowId: number) {
   chrome.runtime.sendMessage({
     type: ActionTypes.SET_FOCUSSED_WINDOW,
-    windowId,
+    data: windowId,
   });
 }
 
 function setActiveTab(tabId: number) {
   chrome.runtime.sendMessage({
     type: ActionTypes.SET_ACTIVE_TAB,
-    tabId,
+    data: tabId,
   });
 }
 
@@ -96,14 +100,19 @@ function getHighlightedHTMLStrings<T>(
 ): Record<string, string> {
   const matches: readonly Fuse.FuseResultMatch[] | undefined =
     fuseResult.matches;
-  const result = {};
+  const result: Record<string, string> = {};
 
   if (typeof matches === 'undefined') {
     return result;
   }
 
-  matches.forEach((match) => {
+  for (const match of matches) {
     const { key, value, indices: regions } = match;
+
+    if (typeof key === 'undefined' || typeof value === 'undefined') {
+      continue;
+    }
+
     let htmlString = '';
     let nextUnhighlightedRegionStartingIndex = 0;
 
@@ -123,12 +132,14 @@ function getHighlightedHTMLStrings<T>(
     htmlString += value.substring(nextUnhighlightedRegionStartingIndex);
 
     result[key] = htmlString;
-  });
+  }
 
   return result;
 }
 
-function getInitialReduxState(platformInfo): IAppState {
+function getInitialReduxState(
+  platformInfo: chrome.runtime.PlatformInfo
+): IAppState {
   const { os } = platformInfo;
 
   const keyboardShortcuts = [

@@ -38,6 +38,7 @@ export const iFrameURL = chrome.runtime.getURL('tez.html');
 export const showOnlyAudibleTabsLabel = 'Audible tabs only';
 export const showOnlyAudibleTabsIdentifer = 'show-audible-tabs-only';
 export const consoleCommands = ['show-keyboard-shortcuts'];
+export const defaultFilename = 'default';
 
 export enum OS {
   MAC = 'mac',
@@ -56,7 +57,7 @@ export enum Keys {
   RETURN = 'Return',
 }
 
-export const mousetrapKeyMappings = {
+export const mousetrapKeyMappings: Record<string, Record<string, string>> = {
   [Keys.OPTION]: {
     [OS.MAC]: 'option',
     [OS.WIN]: 'alt',
@@ -64,7 +65,7 @@ export const mousetrapKeyMappings = {
   },
 };
 
-export const keyLabels = {
+export const keyLabels: Record<string, Record<string, string>> = {
   [Keys.COMMAND]: {
     [OS.MAC]: '⌘',
     [OS.WIN]: 'Ctrl',
@@ -88,7 +89,7 @@ export const noResultsContent = {
   },
 };
 
-export const partialHostnameToFilenameMapping = {
+export const partialHostnameToFilenameMapping: Record<string, string> = {
   'airbnb.com': 'airbnb',
   'behance.net': 'behance',
   'dailymotion.com': 'dailymotion',

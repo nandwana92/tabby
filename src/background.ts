@@ -4,6 +4,23 @@ import {
   contentScriptInjectedPath,
 } from 'src/constants';
 import { sendMessageToActiveTab, getActiveTab } from 'src/backgroundUtils';
+import {
+  GET_TABS_REQUEST,
+  GET_TABS_SUCCESS,
+  SET_FOCUSSED_WINDOW,
+  FOCUSSED_WINDOW_CHANGED,
+  GET_PLATFORM_INFO_REQUEST,
+  GET_PLATFORM_INFO_SUCCESS,
+  GET_ACTIVE_TAB_REQUEST,
+  GET_ACTIVE_TAB_SUCCESS,
+  SET_ACTIVE_TAB,
+  ACTIVE_TAB_CHANGED,
+  TAB_UPDATED,
+  TOGGLE_MUTE,
+  MUTE_TOGGLED,
+  TOGGLE_VISIBILITY,
+  DISPATCH_TOGGLE_VISIBILITY,
+} from 'src/types';
 
 let lastActiveTab: chrome.tabs.Tab | null = null;
 let currentlyActiveTab: chrome.tabs.Tab | null = null;
@@ -16,15 +33,24 @@ chrome.commands.onCommand.addListener((command) => {
   switch (command) {
     case KeyboardShortcuts.TOGGLE_VISIBILITY: {
       sendMessageToActiveTab({
-        type: ActionTypes.TOGGLE_VISIBILITY,
+        type: TOGGLE_VISIBILITY,
       });
 
       injectContentScriptInActiveTab();
 
       break;
     }
+
     case KeyboardShortcuts.JUMP_BACK_TO_PREVIOUS_TAB: {
+      if (lastActiveTab === null) {
+        break;
+      }
+
       const { id: tabId, windowId } = lastActiveTab;
+
+      if (typeof tabId === 'undefined') {
+        break;
+      }
 
       chrome.tabs.update(tabId, {
         active: true,
@@ -50,11 +76,11 @@ function injectContentScriptInActiveTab() {
 
 chrome.runtime.onMessage.addListener(
   (request, sender: chrome.runtime.MessageSender) => {
-    const { type } = request;
+    const { type, data } = request;
 
     switch (type) {
-      case ActionTypes.TOGGLE_MUTE: {
-        const { tabId, muted } = request;
+      case TOGGLE_MUTE: {
+        const { tabId, muted } = data;
 
         chrome.tabs.update(
           tabId,
@@ -62,8 +88,12 @@ chrome.runtime.onMessage.addListener(
             muted,
           },
           (tab) => {
+            if (typeof tab === 'undefined') {
+              return;
+            }
+
             sendMessageToActiveTab({
-              type: ActionTypes.MUTE_TOGGLED,
+              type: MUTE_TOGGLED,
               data: tab,
             });
           }
@@ -72,20 +102,28 @@ chrome.runtime.onMessage.addListener(
         break;
       }
 
-      case ActionTypes.DISPATCH_TOGGLE_VISIBILITY: {
-        const senderTabId = sender.tab.id;
+      case DISPATCH_TOGGLE_VISIBILITY: {
+        const senderTabId = sender.tab?.id;
+
+        if (typeof senderTabId === 'undefined') {
+          return;
+        }
 
         chrome.tabs.executeScript(senderTabId, {
           file: contentScriptInjectedPath,
         });
       }
 
-      case ActionTypes.GET_PLATFORM_INFO_REQUEST: {
-        const senderTabId = sender.tab.id;
+      case GET_PLATFORM_INFO_REQUEST: {
+        const senderTabId = sender.tab?.id;
+
+        if (typeof senderTabId === 'undefined') {
+          return;
+        }
 
         chrome.runtime.getPlatformInfo((platformInfo) => {
           chrome.tabs.sendMessage(senderTabId, {
-            type: ActionTypes.GET_PLATFORM_INFO_SUCCESS,
+            type: GET_PLATFORM_INFO_SUCCESS,
             data: platformInfo,
           });
         });
@@ -93,8 +131,8 @@ chrome.runtime.onMessage.addListener(
         break;
       }
 
-      case ActionTypes.SET_FOCUSSED_WINDOW: {
-        const { windowId } = request;
+      case SET_FOCUSSED_WINDOW: {
+        const { data: windowId } = request;
 
         chrome.windows.update(
           windowId,
@@ -103,7 +141,7 @@ chrome.runtime.onMessage.addListener(
           },
           (window) => {
             sendMessageToActiveTab({
-              type: ActionTypes.FOCUSSED_WINDOW_CHANGED,
+              type: FOCUSSED_WINDOW_CHANGED,
               data: window,
             });
           }
@@ -112,8 +150,8 @@ chrome.runtime.onMessage.addListener(
         break;
       }
 
-      case ActionTypes.SET_ACTIVE_TAB: {
-        const { tabId } = request;
+      case SET_ACTIVE_TAB: {
+        const { data: tabId } = request;
 
         chrome.tabs.update(
           tabId,
@@ -121,8 +159,12 @@ chrome.runtime.onMessage.addListener(
             active: true,
           },
           (tab) => {
+            if (typeof tab === 'undefined') {
+              return;
+            }
+
             sendMessageToActiveTab({
-              type: ActionTypes.ACTIVE_TAB_CHANGED,
+              type: ACTIVE_TAB_CHANGED,
               data: tab,
             });
           }
@@ -131,10 +173,10 @@ chrome.runtime.onMessage.addListener(
         break;
       }
 
-      case ActionTypes.GET_TABS_REQUEST: {
+      case GET_TABS_REQUEST: {
         chrome.tabs.query({}, (tabs) => {
           sendMessageToActiveTab({
-            type: ActionTypes.GET_TABS_SUCCESS,
+            type: GET_TABS_SUCCESS,
             data: tabs,
           });
         });
@@ -155,7 +197,7 @@ chrome.tabs.onUpdated.addListener(
     tab: chrome.tabs.Tab
   ) => {
     sendMessageToActiveTab({
-      type: ActionTypes.TAB_UPDATED,
+      type: TAB_UPDATED,
       data: {
         tabId,
         changeInfo,
@@ -220,7 +262,7 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
     if (lastActiveTab === null) {
       lastActiveTab = currentlyActiveTab = tab;
     } else {
-      const { windowId: lastFocussedRealWindowId } = scopedCurrentlyActiveTab;
+      const { windowId: lastFocussedRealWindowId } = scopedCurrentlyActiveTab!;
       const { windowId: currentlyFocussedRealWindowId } = tab;
 
       if (lastFocussedRealWindowId === currentlyFocussedRealWindowId) {

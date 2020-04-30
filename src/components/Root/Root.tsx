@@ -98,17 +98,12 @@ export class Root extends React.Component<TAllProps, IRootState> {
           this.fuse = new Fuse(tabs, fuseOptions);
 
           if (this.state.searchInputValue.trim() !== '') {
-            this.setState(
-              {
-                tabs: transformIntoFuseResultLikeShape(tabs),
-                fuzzySearchResults: this.fuse.search<chrome.tabs.Tab>(
-                  searchInputValue
-                ),
-              },
-              () => {
-                console.log(fuseOptions, this.state.fuzzySearchResults);
-              }
-            );
+            this.setState({
+              tabs: transformIntoFuseResultLikeShape(tabs),
+              fuzzySearchResults: this.fuse.search<chrome.tabs.Tab>(
+                searchInputValue
+              ),
+            });
           } else {
             this.setState({
               tabs: transformIntoFuseResultLikeShape(tabs),

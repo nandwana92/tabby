@@ -1,3 +1,5 @@
+import { MessageTypes } from 'src/types';
+
 function getActiveTab(): Promise<chrome.tabs.Tab> {
   return new Promise((resolve) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -6,13 +8,15 @@ function getActiveTab(): Promise<chrome.tabs.Tab> {
   });
 }
 
-function sendMessageToActiveTab(action) {
+function sendMessageToActiveTab(action: MessageTypes) {
   getActiveTab().then((tab) => {
-    if (typeof tab !== 'undefined') {
-      chrome.tabs.sendMessage(tab.id, action);
-    } else {
-      console.error('tab property is undefined');
+    const tabId = tab.id;
+
+    if (typeof tabId === 'undefined') {
+      return;
     }
+
+    chrome.tabs.sendMessage(tabId, action);
   });
 }
 

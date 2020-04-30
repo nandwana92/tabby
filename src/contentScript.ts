@@ -24,9 +24,9 @@ class ChromeOnSteroids {
   }
 
   toggleRootVisibility() {
-    this.chromeOnSteroidsRootElement.classList.toggle(styles['visible']);
+    this.chromeOnSteroidsRootElement?.classList.toggle(styles['visible']);
 
-    const isChromeOnSteroidsVisible = this.chromeOnSteroidsRootElement.classList.contains(
+    const isChromeOnSteroidsVisible = this.chromeOnSteroidsRootElement?.classList.contains(
       styles['visible']
     );
 

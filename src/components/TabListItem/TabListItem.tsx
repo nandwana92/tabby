@@ -56,6 +56,10 @@ export class TabListItem extends React.Component<TAllProps, ITabListItemState> {
     const node = this.liElementRef.current;
     const containerNode = this.props.containerRef.current;
 
+    if (node === null || containerNode === null) {
+      return;
+    }
+
     const containerTop = containerNode.scrollTop;
     const containerBottom = containerTop + containerNode.clientHeight;
 
@@ -78,6 +82,10 @@ export class TabListItem extends React.Component<TAllProps, ITabListItemState> {
 
   private handleClick = (tab: chrome.tabs.Tab) => () => {
     const { id, windowId } = tab;
+
+    if (typeof id === 'undefined') {
+      return;
+    }
 
     jumpToTab(id, windowId);
     dispatchToggleVisibilityAction();
