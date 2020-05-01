@@ -1,4 +1,4 @@
-import { iFrameURL } from 'src/constants';
+import { iframeUrl } from 'src/constants';
 
 const chromeOnSteroidsIframeContainer = document.getElementById(
   'chrome-on-steroids-iframe-container'
@@ -25,7 +25,7 @@ if (chromeOnSteroidsIframeContainer === null) {
     'style',
     'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; border: none;'
   );
-  iFrame.src = iFrameURL;
+  iFrame.src = iframeUrl;
   chromeOnSteroidsRootElement.append(iFrame);
 
   document.body.insertAdjacentElement(

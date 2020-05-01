@@ -34,7 +34,7 @@ export enum KeyboardShortcuts {
 
 export const AUDIBLE_TABS_POLL_FREQUENCY_IN_MS = 1000;
 export const contentScriptInjectedPath = 'dist/contentScriptInjected.js';
-export const iFrameURL = chrome.runtime.getURL('tez.html');
+export const iframeUrl = chrome.runtime.getURL('tez.html');
 export const showOnlyAudibleTabsLabel = 'Audible tabs only';
 export const showOnlyAudibleTabsIdentifer = 'show-audible-tabs-only';
 export const consoleCommands = ['show-keyboard-shortcuts'];

@@ -1,6 +1,7 @@
 import {
   ActionTypes,
   KeyboardShortcuts,
+  iframeUrl,
   contentScriptInjectedPath,
 } from 'src/constants';
 import { sendMessageToActiveTab, getActiveTab } from 'src/backgroundUtils';
@@ -69,8 +70,43 @@ chrome.commands.onCommand.addListener((command) => {
 });
 
 function injectContentScriptInActiveTab() {
-  chrome.tabs.executeScript({
-    file: contentScriptInjectedPath,
+  getActiveTab().then((tab) => {
+    const { id, url } = tab;
+
+    if (typeof id === 'undefined') {
+      return;
+    }
+
+    if (url === iframeUrl) {
+      chrome.tabs.remove(id);
+      // Close this tab.
+    } else {
+      // Chrome doesn't allow injecting scripts in certain pages. chrome://*, Chrome
+      // Web Store are blocked.
+
+      chrome.tabs.executeScript(
+        {
+          file: contentScriptInjectedPath,
+        },
+        () => {
+          // If executing executeScript throws an error is there a way to catch in a
+          // try-catch? Doesn't seem to work because of its async nature seems like.
+
+          const error = chrome.runtime.lastError;
+
+          // If there was an error thrown by this script, it's assumed that it's
+          // because of an attemp to inject script on an disallowed tab.
+          if (typeof error !== 'undefined') {
+            const { index } = tab;
+
+            chrome.tabs.create({
+              url: iframeUrl,
+              index: tab.index,
+            });
+          }
+        }
+      );
+    }
   });
 }
 

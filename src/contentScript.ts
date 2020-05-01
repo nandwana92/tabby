@@ -1,4 +1,4 @@
-import { ActionTypes, iFrameURL } from 'src/constants';
+import { ActionTypes, iframeUrl } from 'src/constants';
 
 import styles from './contentScript.css';
 
@@ -14,7 +14,7 @@ class ChromeOnSteroids {
     this.chromeOnSteroidsRootElement = document.createElement('div');
     this.chromeOnSteroidsRootElement.classList.add(styles['root']);
     const iFrame = document.createElement('iframe');
-    iFrame.src = iFrameURL;
+    iFrame.src = iframeUrl;
     this.chromeOnSteroidsRootElement.append(iFrame);
 
     document.body.insertAdjacentElement(
