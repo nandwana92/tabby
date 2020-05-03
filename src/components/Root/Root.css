@@ -9,30 +9,46 @@ input {
 }
 
 .container {
-  position: fixed;
-  z-index: 2147483647;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  background-color: transparent;
   transition-property: background-color;
   transition-duration: 0.2s;
   transition-timing-function: ease-in;
 
-  &.visible {
-    background-color: rgba(0, 0, 0, 0.2);
+  &.full-screen-mode {
+    position: fixed;
+    z-index: 2147483647;
+    display: flex;
+    justify-content: center;
+    padding-top: 128px;
+    width: 100vw;
+    height: 100vh;
+    background-color: transparent;
 
+    .popup {
+      width: 800px;
+      max-width: 90vw;
+    }
+
+    &.visible {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  &.embed {
+    width: 50vw;
+
+    .popup {
+      max-width: 90%;
+    }
+  }
+
+  &.visible {
     .popup {
       opacity: 1;
     }
   }
 
   .popup {
-    margin-top: 128px;
     align-self: flex-start;
-    width: 800px;
-    max-width: 90vw;
     box-shadow: 20px 36px 36px 0px rgba(0, 0, 0, 0.5);
     border-radius: 4px;
     border: 1px solid lightgray;

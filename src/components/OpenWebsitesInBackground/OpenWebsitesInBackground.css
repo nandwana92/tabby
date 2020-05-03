@@ -1,0 +1,44 @@
+.open-websites-in-background {
+  align-self: flex-start;
+  margin-left: 64px;
+
+  .open-tabs-button {
+    margin-left: 12px;
+  }
+
+  .loading {
+    animation: pulse 0.5s infinite;
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  .icon-and-url-container {
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .url {
+    font-size: 14px;
+    color: #551a8b;
+  }
+
+  .icon {
+    height: 24px;
+    margin-right: 12px;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    border-color: #f8f8f8;
+  }
+  50% {
+    border-color: #cad9fc;
+  }
+  100% {
+    border-color: #f8f8f8;
+  }
+}

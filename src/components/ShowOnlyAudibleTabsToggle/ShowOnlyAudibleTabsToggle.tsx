@@ -11,7 +11,8 @@ import {
   showOnlyAudibleTabsLabel,
   showOnlyAudibleTabsIdentifer,
   keyLabels,
-  Keys,
+  ModifierKey,
+  consoleCommands,
 } from 'src/constants';
 
 import styles from './ShowOnlyAudibleTabsToggle.css';
@@ -68,7 +69,7 @@ export class ShowOnlyAudibleTabsToggle extends React.Component<
 
     Mousetrap.bind('mod+s', (e: ExtendedKeyboardEvent, combo: string) => {
       const { showAudibleTabsOnly } = this.props;
-      e.preventDefault();
+      e.preventDefault?.();
       updateShowAudibleTabsOnlyFlagValue(!showAudibleTabsOnly);
     });
   }
@@ -105,7 +106,7 @@ export class ShowOnlyAudibleTabsToggle extends React.Component<
               {showOnlyAudibleTabsLabel}
             </div>
             <div className={styles['keyboard-shortcut']}>
-              <kbd>{keyLabels[Keys.COMMAND][os]}</kbd>+<kbd>S</kbd>
+              <kbd>{keyLabels[ModifierKey.META][os]}</kbd>+<kbd>S</kbd>
             </div>
           </div>
         </div>

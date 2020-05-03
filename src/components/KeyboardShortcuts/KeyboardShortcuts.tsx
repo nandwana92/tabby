@@ -1,5 +1,6 @@
-import * as React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
+import * as React from 'react';
+import cx from 'classnames';
 
 import { iconUrls } from 'src/constants';
 import { IAppState } from 'src/types';
@@ -14,16 +15,18 @@ const connector = connect(mapState);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export interface IKeyboardShortcutsProps {}
+export interface IKeyboardShortcutsProps {
+  className?: string;
+}
 
 type TAllProps = PropsFromRedux & IKeyboardShortcutsProps;
 
 export class KeyboardShortcuts extends React.PureComponent<TAllProps> {
   public render() {
-    const { keyboardShortcuts } = this.props;
+    const { keyboardShortcuts, className } = this.props;
 
     return (
-      <div className={styles['keyboard-shortcuts']}>
+      <div className={cx(styles['keyboard-shortcuts'], className)}>
         <img className={styles['illustration']} src={iconUrls.keyboard} />
         <table>
           <tbody>

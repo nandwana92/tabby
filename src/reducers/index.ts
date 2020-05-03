@@ -3,6 +3,7 @@ import {
   AppActions,
   UPDATE_IS_CHROME_ON_STEROIDS_VISIBLE_VALUE,
   UPDATE_SHOW_AUDIBLE_TABS_ONLY_FLAG_VALUE,
+  UPDATE_SEARCH_INPUT_VALUE,
 } from 'src/types';
 
 // FIXME: An initial state value has to provided from what it looks like. When the store, at the time
@@ -11,6 +12,7 @@ import {
 const initialState: IAppState = {
   showAudibleTabsOnly: false,
   isChromeOnSteroidsVisible: false,
+  searchInputValue: '',
   platformInfo: {
     arch: 'x86-64',
     nacl_arch: 'x86-64',
@@ -38,6 +40,14 @@ export function rootReducer(
       return {
         ...state,
         isChromeOnSteroidsVisible,
+      };
+
+    case UPDATE_SEARCH_INPUT_VALUE:
+      const { payload: searchInputValue } = action;
+
+      return {
+        ...state,
+        searchInputValue,
       };
 
     default:

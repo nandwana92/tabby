@@ -8,6 +8,14 @@ function getActiveTab(): Promise<chrome.tabs.Tab> {
   });
 }
 
+function getTabById(tabId: number): Promise<chrome.tabs.Tab> {
+  return new Promise((resolve) => {
+    chrome.tabs.get(tabId, (tab) => {
+      resolve(tab);
+    });
+  });
+}
+
 function sendMessageToActiveTab(action: MessageTypes) {
   getActiveTab().then((tab) => {
     const tabId = tab.id;
@@ -20,4 +28,4 @@ function sendMessageToActiveTab(action: MessageTypes) {
   });
 }
 
-export { getActiveTab, sendMessageToActiveTab };
+export { getActiveTab, getTabById, sendMessageToActiveTab };

@@ -5,6 +5,7 @@ import debounce from 'lodash/debounce';
 import { Cancelable } from 'lodash';
 
 import ShowOnlyAudibleTabsToggle from 'src/components/ShowOnlyAudibleTabsToggle/ShowOnlyAudibleTabsToggle';
+import { updateSearchInputValue } from 'src/actions';
 import { iconUrls } from 'src/constants';
 import { IAppState } from 'src/types';
 
@@ -12,9 +13,14 @@ import styles from './SearchBox.css';
 
 const mapState = (state: IAppState) => ({
   isChromeOnSteroidsVisible: state.isChromeOnSteroidsVisible,
+  searchInputValue: state.searchInputValue,
 });
 
-const connector = connect(mapState);
+const mapDispatch = {
+  updateSearchInputValue,
+};
+
+const connector = connect(mapState, mapDispatch);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -24,7 +30,7 @@ export interface ISearchBoxProps {
 }
 
 export interface ISearchBoxState {
-  inputValue: string;
+  searchInputValue: string;
 }
 
 type TAllProps = PropsFromRedux & ISearchBoxProps;
@@ -49,11 +55,15 @@ export class SearchBox extends React.Component<TAllProps, ISearchBoxState> {
     }
 
     this.state = {
-      inputValue: '',
+      searchInputValue: '',
     };
   }
 
   componentDidUpdate(prevProps: TAllProps, prevState: ISearchBoxState) {
+    const { searchInputValue: prevPropsSearchInputValue } = prevProps;
+    const { searchInputValue: propsSearchInputValue } = this.props;
+    const { searchInputValue } = this.state;
+
     if (
       prevProps.isChromeOnSteroidsVisible !==
       this.props.isChromeOnSteroidsVisible
@@ -63,17 +73,21 @@ export class SearchBox extends React.Component<TAllProps, ISearchBoxState> {
       } else {
         this.setState(
           {
-            inputValue: '',
+            searchInputValue: '',
           },
           this.callOnSearchBoxInputChangeDebounced
         );
       }
     }
+
+    if (propsSearchInputValue !== prevPropsSearchInputValue) {
+      this.callOnSearchBoxInputChangeDebounced();
+    }
   }
 
   private callOnSearchBoxInputChangeDebounced = () => {
     if (typeof this.onSearchBoxInputChangeDebounced === 'function') {
-      this.onSearchBoxInputChangeDebounced(this.state.inputValue);
+      this.onSearchBoxInputChangeDebounced(this.getInputValue());
     }
   };
 
@@ -93,17 +107,25 @@ export class SearchBox extends React.Component<TAllProps, ISearchBoxState> {
   private handleSearchBoxInputChange = (
     e: React.SyntheticEvent<HTMLInputElement>
   ) => {
-    const { onSearchBoxInputChange } = this.props;
+    const {
+      updateSearchInputValue,
+      searchInputValue: propsSearchInputValue,
+    } = this.props;
+
+    if (propsSearchInputValue.length > 0) {
+      updateSearchInputValue('');
+    }
+
     const element = e.target as HTMLInputElement;
-    const inputValue = element.value;
-    const trimmedPreviousValue = this.state.inputValue.trim();
+    const searchInputValue = element.value;
+    const trimmedPreviousValue = this.state.searchInputValue.trim();
 
     this.setState(
       {
-        inputValue,
+        searchInputValue,
       },
       () => {
-        const trimmedNextValue = this.state.inputValue.trim();
+        const trimmedNextValue = this.state.searchInputValue.trim();
 
         if (trimmedNextValue !== trimmedPreviousValue) {
           // If after stripping the leading and trailing whitespace from the
@@ -116,8 +138,20 @@ export class SearchBox extends React.Component<TAllProps, ISearchBoxState> {
     );
   };
 
+  private getInputValue = (): string => {
+    const { searchInputValue: propsSearchInputValue } = this.props;
+    const { searchInputValue } = this.state;
+
+    if (searchInputValue.length > 0) {
+      return searchInputValue;
+    }
+
+    return propsSearchInputValue;
+  };
+
   public render() {
     const { className } = this.props;
+    const searchInputValue = this.getInputValue();
 
     return (
       <div className={cx(styles['search-box'], className)}>
@@ -132,7 +166,7 @@ export class SearchBox extends React.Component<TAllProps, ISearchBoxState> {
           ref={this.inputElementRef}
           placeholder="Search"
           type="text"
-          value={this.state.inputValue}
+          value={searchInputValue}
         />
         <ShowOnlyAudibleTabsToggle />
       </div>

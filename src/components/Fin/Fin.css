@@ -1,0 +1,44 @@
+.fin {
+  margin-top: 64px;
+  padding: 0 32px;
+  opacity: 0;
+  visibility: hidden;
+  transition-property: opacity visibility;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in;
+  transition-delay: 0.8s;
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  a.repo-link {
+    margin-left: 8px;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: #428dff;
+  }
+
+  .keyboard-shortcuts {
+    margin: 24px;
+  }
+
+  .illustration {
+    margin: 0 8px;
+    height: 24px;
+  }
+}
+
+.unstyled-anchor-tag {
+  &:link,
+  &:visited {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: auto;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}

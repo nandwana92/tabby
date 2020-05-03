@@ -32,7 +32,9 @@ const connector = connect(mapState, mapDispatch);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export interface IRootProps {}
+export interface IRootProps {
+  isEmbedded?: boolean;
+}
 
 type TAllProps = PropsFromRedux & IRootProps;
 
@@ -75,7 +77,14 @@ export class Root extends React.Component<TAllProps, IRootState> {
     }, 0);
   }
 
-  componentDidUpdate(prevProps: TAllProps, prevState: IRootProps) {
+  componentDidUpdate(prevProps: TAllProps, prevState: IRootState) {
+    if (
+      !prevProps.isChromeOnSteroidsVisible &&
+      this.props.isChromeOnSteroidsVisible
+    ) {
+      // debugger;
+    }
+
     if (prevProps.showAudibleTabsOnly !== this.props.showAudibleTabsOnly) {
       this.getTabs();
     }
@@ -239,7 +248,7 @@ export class Root extends React.Component<TAllProps, IRootState> {
   }
 
   public render() {
-    const { isChromeOnSteroidsVisible } = this.props;
+    const { isChromeOnSteroidsVisible, isEmbedded = false } = this.props;
     const resultsComponent = this.getResultsComponent();
     const resultsSectionVisible = resultsComponent !== null;
 
@@ -249,6 +258,8 @@ export class Root extends React.Component<TAllProps, IRootState> {
           styles['container'],
           {
             [styles['visible']]: isChromeOnSteroidsVisible,
+            [styles['full-screen-mode']]: !isEmbedded,
+            [styles['embed']]: isEmbedded,
           },
         ])}
       >

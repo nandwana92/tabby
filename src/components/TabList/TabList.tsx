@@ -11,7 +11,7 @@ import {
   dispatchToggleVisibilityAction,
   handleToggleMuteButtonClick,
 } from 'src/utils';
-import { iconUrls, mousetrapKeyMappings, Keys, OS } from 'src/constants';
+import { iconUrls, mousetrapKeyMappings, ModifierKey, OS } from 'src/constants';
 import TabListItem from 'src/components/TabListItem/TabListItem';
 import { IAppState } from 'src/types';
 
@@ -75,7 +75,7 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
     const { os } = platformInfo;
 
     for (let i = 1; i < 10; i++) {
-      const key = `${mousetrapKeyMappings[Keys.OPTION][os]}+${i}`;
+      const key = `${mousetrapKeyMappings[ModifierKey.ALT][os]}+${i}`;
 
       Mousetrap.bind(key, this.handleToggleMuteButtonClick);
     }
@@ -116,7 +116,7 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
     Mousetrap.unbind('down');
     Mousetrap.unbind('enter');
     for (let i = 1; i < 10; i++) {
-      const key = `${mousetrapKeyMappings[Keys.OPTION][os]}+${i}`;
+      const key = `${mousetrapKeyMappings[ModifierKey.ALT][os]}+${i}`;
       Mousetrap.unbind(key);
     }
     for (let i = 1; i < 10; i++) {
@@ -183,6 +183,14 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
     }
   };
 
+  private getUrl(tab: chrome.tabs.Tab): string | undefined {
+    if (typeof tab.url === 'string' && tab.url.length > 0) {
+      return tab.url;
+    }
+
+    return tab.pendingUrl;
+  }
+
   public render() {
     const { highlightedItemIndex } = this.state;
     const { tabs } = this.props;
@@ -194,7 +202,7 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
           const muted = item.mutedInfo?.muted === true;
           const showAudibleIcon = item.audible === true;
           const iconUrl = muted ? iconUrls.mute : iconUrls.volume;
-          const websiteIconFilename = getFilenameFromURL(item.url);
+          const websiteIconFilename = getFilenameFromURL(this.getUrl(item));
           const websiteIconFilePath =
             websiteIconFilename !== 'default' || !item.favIconUrl
               ? getWebsiteIconPathFromFilename(websiteIconFilename)
