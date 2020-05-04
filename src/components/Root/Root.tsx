@@ -9,7 +9,10 @@ import TabList from 'src/components/TabList/TabList';
 import SearchBox from 'src/components/SearchBox/SearchBox';
 import { updateIsChromeOnSteroidsVisibleFlagValue } from 'src/actions';
 import { IAppState, ModeTypes } from 'src/types';
-import { transformIntoFuseResultLikeShape } from 'src/utils';
+import {
+  transformIntoFuseResultLikeShape,
+  dispatchToggleVisibilityAction,
+} from 'src/utils';
 import { fuseOptions } from 'src/config';
 import {
   ActionTypes,
@@ -61,9 +64,6 @@ export class Root extends React.Component<TAllProps, IRootState> {
       fuzzySearchResults: [],
       consoleModeFuzzySearchResults: [],
     };
-
-    this.registerListeners();
-    this.getTabs();
   }
 
   componentDidMount() {
@@ -75,6 +75,9 @@ export class Root extends React.Component<TAllProps, IRootState> {
     setTimeout(() => {
       updateIsChromeOnSteroidsVisibleFlagValue(true);
     }, 0);
+
+    this.registerListeners();
+    this.getTabs();
   }
 
   componentDidUpdate(prevProps: TAllProps) {
@@ -84,6 +87,10 @@ export class Root extends React.Component<TAllProps, IRootState> {
   }
 
   private registerListeners() {
+    Mousetrap.bind('esc', () => {
+      dispatchToggleVisibilityAction();
+    });
+
     chrome.runtime.onMessage.addListener((request) => {
       const { type } = request;
 

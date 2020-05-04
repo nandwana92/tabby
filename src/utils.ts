@@ -163,6 +163,10 @@ function getInitialReduxState(
       }</kbd>+<kbd>shift</kbd>+<kbd>space</kbd>`,
     },
     {
+      label: `Close Tez`,
+      shortcut: `<kbd>esc</kbd>`,
+    },
+    {
       label: `Jump back to previous tab`,
       shortcut: `<kbd>${
         keyLabels[ModifierKey.META][os]
