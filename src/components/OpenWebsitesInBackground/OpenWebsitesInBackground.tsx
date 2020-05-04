@@ -5,6 +5,7 @@ import Button from 'src/components/Button/Button';
 import { OPEN_URLS_IN_BACKGROUND, AsyncStatus } from 'src/types';
 import { websitesToOpenForDemo } from 'src/constants';
 import { getWebsiteIconPathFromFilename } from 'src/utils';
+import { iconUrls } from 'src/constants';
 
 import styles from './OpenWebsitesInBackground.css';
 
@@ -63,14 +64,14 @@ export default class OpenWebsitesInBackground extends React.Component<
     const { id = 'open-websites-in-background' } = this.props;
 
     const openTabsButtonText =
-      tabsOpeningStatus === AsyncStatus.SUCCESS ? 'Done!' : 'OK!';
+      tabsOpeningStatus === AsyncStatus.SUCCESS ? 'Done!' : 'Go!';
     const disableOpenTabsButton =
       tabsOpeningStatus === AsyncStatus.LOADING ||
       tabsOpeningStatus === AsyncStatus.SUCCESS;
 
     return (
       <div id={id} className={styles['open-websites-in-background']}>
-        <div>
+        <div className={styles['tap-open-prompt']}>
           Before we start,
           <br /> let's open a few tabs in the background for the demo.
           <Button
@@ -81,6 +82,9 @@ export default class OpenWebsitesInBackground extends React.Component<
             })}
           >
             {openTabsButtonText}
+            {tabsOpeningStatus === AsyncStatus.SUCCESS ? null : (
+              <img className={styles['go-icon']} src={iconUrls.next} />
+            )}
           </Button>
         </div>
         <ul>

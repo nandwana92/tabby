@@ -59,7 +59,7 @@ export class SearchBox extends React.Component<TAllProps, ISearchBoxState> {
     };
   }
 
-  componentDidUpdate(prevProps: TAllProps, prevState: ISearchBoxState) {
+  componentDidUpdate(prevProps: TAllProps) {
     const { searchInputValue: prevPropsSearchInputValue } = prevProps;
     const { searchInputValue: propsSearchInputValue } = this.props;
 

@@ -2,8 +2,26 @@
   align-self: flex-start;
   margin-left: 64px;
 
+  .tap-open-prompt {
+    display: flex;
+  }
+
   .open-tabs-button {
+    align-self: center;
+    display: flex;
+    align-items: center;
     margin-left: 12px;
+    padding: 0 12px;
+
+    .go-icon {
+      margin-left: 8px;
+      height: 18px;
+      animation-name: pulse;
+      animation-duration: 0.5s;
+      animation-timing-function: ease-out;
+      animation-direction: alternate;
+      animation-iteration-count: infinite;
+    }
   }
 
   .loading {
@@ -33,12 +51,10 @@
 
 @keyframes pulse {
   0% {
-    border-color: #f8f8f8;
+    transform: translateX(0);
   }
-  50% {
-    border-color: #cad9fc;
-  }
+
   100% {
-    border-color: #f8f8f8;
+    transform: translateX(5px);
   }
 }

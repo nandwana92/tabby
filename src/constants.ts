@@ -22,6 +22,7 @@ export const iconUrls = {
   search: chrome.runtime.getURL('images/loupe.svg'),
   star: chrome.runtime.getURL('images/star.svg'),
   mute: chrome.runtime.getURL('images/mute.svg'),
+  next: chrome.runtime.getURL('images/next.svg'),
   fourOFour: chrome.runtime.getURL('images/404.svg'),
   keyboard: chrome.runtime.getURL('images/keyboard.svg'),
   searchInputBoxGuide: chrome.runtime.getURL(
@@ -62,6 +63,7 @@ export enum OS {
 export enum ModifierKey {
   META = 'META',
   ALT = 'ALT',
+  ENTER = 'ENTER',
 }
 
 export const mousetrapKeyMappings: Record<string, Record<string, string>> = {
@@ -75,13 +77,18 @@ export const mousetrapKeyMappings: Record<string, Record<string, string>> = {
 export const keyLabels: Record<string, Record<string, string>> = {
   [ModifierKey.META]: {
     [OS.MAC]: '⌘',
-    [OS.WIN]: 'Ctrl',
-    [OS.LINUX]: 'Ctrl',
+    [OS.WIN]: 'ctrl',
+    [OS.LINUX]: 'ctrl',
   },
   [ModifierKey.ALT]: {
     [OS.MAC]: '⌥',
-    [OS.WIN]: 'Alt',
-    [OS.LINUX]: 'Alt',
+    [OS.WIN]: 'alt',
+    [OS.LINUX]: 'alt',
+  },
+  [ModifierKey.ENTER]: {
+    [OS.MAC]: 'return',
+    [OS.WIN]: 'enter',
+    [OS.LINUX]: 'enter',
   },
 };
 

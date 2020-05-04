@@ -12,4 +12,24 @@
     opacity: 1;
     visibility: visible;
   }
+
+  .tip {
+    margin-top: 32px;
+    opacity: 0;
+    visibility: hidden;
+    transition-property: opacity visibility;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-in;
+    transition-delay: 0.8s;
+
+    &.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mute-toggle-combo {
+      display: inline-block;
+      margin: 0 12px;
+    }
+  }
 }

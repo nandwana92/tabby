@@ -1,3 +1,4 @@
+import { connect, ConnectedProps } from 'react-redux';
 import React, { createRef } from 'react';
 import cx from 'classnames';
 import Mousetrap from 'mousetrap';
@@ -6,10 +7,19 @@ import ConnectedSimulateKeyPresses, {
   InteractionType,
   SimulateKeyPresses,
 } from 'src/components/SimulateKeyPresses/SimulateKeyPresses';
-import { Key } from 'src/types';
+import { keyLabels, ModifierKey } from 'src/constants';
+import { Key, IAppState } from 'src/types';
 import { sleep } from 'src/utils';
 
 import styles from './ShowOnlyAudibleTabsDemo.css';
+
+const mapState = (state: IAppState) => ({
+  platformInfo: state.platformInfo,
+});
+
+const connector = connect(mapState);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export interface IShowOnlyAudibleTabsDemoProps {
   id?: string;
@@ -17,18 +27,24 @@ export interface IShowOnlyAudibleTabsDemoProps {
   visible?: boolean;
 }
 
-export interface IShowOnlyAudibleTabsDemoState {}
+export interface IShowOnlyAudibleTabsDemoState {
+  done: boolean;
+}
 
-export default class ShowOnlyAudibleTabsDemo extends React.Component<
-  IShowOnlyAudibleTabsDemoProps,
+type TAllProps = PropsFromRedux & IShowOnlyAudibleTabsDemoProps;
+
+export class ShowOnlyAudibleTabsDemo extends React.Component<
+  TAllProps,
   IShowOnlyAudibleTabsDemoState
 > {
   private simulateKeyPressesRef = createRef<SimulateKeyPresses>();
 
-  constructor(props: IShowOnlyAudibleTabsDemoProps) {
+  constructor(props: TAllProps) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      done: false,
+    };
   }
 
   componentDidMount() {
@@ -39,7 +55,7 @@ export default class ShowOnlyAudibleTabsDemo extends React.Component<
     }
   }
 
-  componentDidUpdate(prevProps: IShowOnlyAudibleTabsDemoProps) {
+  componentDidUpdate(prevProps: TAllProps) {
     const { visible = true } = this.props;
     const { visible: prevPropsVisible = true } = prevProps;
 
@@ -50,6 +66,10 @@ export default class ShowOnlyAudibleTabsDemo extends React.Component<
 
   private onDone = () => {
     const { onDone } = this.props;
+
+    this.setState({
+      done: true,
+    });
 
     Mousetrap.trigger('mod+s');
 
@@ -64,7 +84,14 @@ export default class ShowOnlyAudibleTabsDemo extends React.Component<
   }
 
   public render() {
-    const { visible, id = 'show-only-audible-tabs-demo' } = this.props;
+    const {
+      visible,
+      platformInfo,
+      id = 'show-only-audible-tabs-demo',
+    } = this.props;
+    const { done } = this.state;
+
+    const { os } = platformInfo;
 
     return (
       <div
@@ -81,7 +108,20 @@ export default class ShowOnlyAudibleTabsDemo extends React.Component<
           autoStart={false}
           ref={this.simulateKeyPressesRef}
         />
+        <div
+          className={cx(styles['tip'], {
+            [styles['visible']]: done,
+          })}
+        >
+          You can also use the shortcut{' '}
+          <span className={styles['mute-toggle-combo']}>
+            <kbd>{keyLabels[ModifierKey.ALT][os]}</kbd>+<kbd>[1-9]</kbd>
+          </span>
+          to toggle mute for a tab.
+        </div>
       </div>
     );
   }
 }
+
+export default connector(ShowOnlyAudibleTabsDemo);

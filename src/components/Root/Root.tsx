@@ -77,14 +77,7 @@ export class Root extends React.Component<TAllProps, IRootState> {
     }, 0);
   }
 
-  componentDidUpdate(prevProps: TAllProps, prevState: IRootState) {
-    if (
-      !prevProps.isChromeOnSteroidsVisible &&
-      this.props.isChromeOnSteroidsVisible
-    ) {
-      // debugger;
-    }
-
+  componentDidUpdate(prevProps: TAllProps) {
     if (prevProps.showAudibleTabsOnly !== this.props.showAudibleTabsOnly) {
       this.getTabs();
     }

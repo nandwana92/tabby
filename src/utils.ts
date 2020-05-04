@@ -153,18 +153,20 @@ function getInitialReduxState(
 ): IAppState {
   const { os } = platformInfo;
 
+  // For some weird reason, the down arrow is rendering much bigger than the up
+  // arrow. So inverting up arrow as a workaround 🤷🏼‍♂️.
   const keyboardShortcuts = [
     {
       label: `Toggle Tez's visibility`,
       shortcut: `<kbd>${
         keyLabels[ModifierKey.META][os]
-      }</kbd>+<kbd>Shift</kbd>+<kbd>Space</kbd>`,
+      }</kbd>+<kbd>shift</kbd>+<kbd>space</kbd>`,
     },
     {
       label: `Jump back to previous tab`,
       shortcut: `<kbd>${
         keyLabels[ModifierKey.META][os]
-      }</kbd>+<kbd>Shift</kbd>+<kbd>U</kbd>`,
+      }</kbd>+<kbd>shift</kbd>+<kbd>U</kbd>`,
     },
     {
       label: `Toggle <i>Audible Tabs Only</i> switch`,
@@ -172,11 +174,19 @@ function getInitialReduxState(
     },
     {
       label: `Jump to nth tab in the results`,
-      shortcut: `<kbd>Shift</kbd>+<kbd>[1-9]</kbd>`,
+      shortcut: `<kbd>shift</kbd>+<kbd>[1-9]</kbd>`,
     },
     {
       label: `Toggle mute for nth tab in the results`,
       shortcut: `<kbd>${keyLabels[ModifierKey.ALT][os]}</kbd>+<kbd>[1-9]</kbd>`,
+    },
+    {
+      label: `Navigate through the list of tabs`,
+      shortcut: `<kbd><span>▲<span></kbd> / <kbd><span style="transform: rotate(180deg); display: flex;">▲<span></kbd>`,
+    },
+    {
+      label: `Jump to the highlighted tab in the list`,
+      shortcut: `<kbd>${keyLabels[ModifierKey.ENTER][os]}</kbd>`,
     },
   ];
 

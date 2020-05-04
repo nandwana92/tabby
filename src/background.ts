@@ -37,10 +37,6 @@ let currentlyFocussedRealWindowId: number | null = null;
 chrome.commands.onCommand.addListener((command) => {
   switch (command) {
     case KeyboardShortcuts.TOGGLE_VISIBILITY: {
-      sendMessageToActiveTab({
-        type: TOGGLE_VISIBILITY,
-      });
-
       injectContentScriptInActiveTab();
 
       break;
