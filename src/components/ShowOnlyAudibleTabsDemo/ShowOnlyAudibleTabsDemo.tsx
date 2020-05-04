@@ -1,4 +1,3 @@
-import { connect, ConnectedProps } from 'react-redux';
 import React, { createRef } from 'react';
 import cx from 'classnames';
 import Mousetrap from 'mousetrap';
@@ -7,19 +6,10 @@ import ConnectedSimulateKeyPresses, {
   InteractionType,
   SimulateKeyPresses,
 } from 'src/components/SimulateKeyPresses/SimulateKeyPresses';
-import { keyLabels, ModifierKey } from 'src/constants';
-import { Key, IAppState } from 'src/types';
+import { Key } from 'src/types';
 import { sleep } from 'src/utils';
 
 import styles from './ShowOnlyAudibleTabsDemo.css';
-
-const mapState = (state: IAppState) => ({
-  platformInfo: state.platformInfo,
-});
-
-const connector = connect(mapState);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export interface IShowOnlyAudibleTabsDemoProps {
   id?: string;
@@ -31,15 +21,13 @@ export interface IShowOnlyAudibleTabsDemoState {
   done: boolean;
 }
 
-type TAllProps = PropsFromRedux & IShowOnlyAudibleTabsDemoProps;
-
-export class ShowOnlyAudibleTabsDemo extends React.Component<
-  TAllProps,
+export default class ShowOnlyAudibleTabsDemo extends React.Component<
+  IShowOnlyAudibleTabsDemoProps,
   IShowOnlyAudibleTabsDemoState
 > {
   private simulateKeyPressesRef = createRef<SimulateKeyPresses>();
 
-  constructor(props: TAllProps) {
+  constructor(props: IShowOnlyAudibleTabsDemoProps) {
     super(props);
 
     this.state = {
@@ -55,7 +43,7 @@ export class ShowOnlyAudibleTabsDemo extends React.Component<
     }
   }
 
-  componentDidUpdate(prevProps: TAllProps) {
+  componentDidUpdate(prevProps: IShowOnlyAudibleTabsDemoProps) {
     const { visible = true } = this.props;
     const { visible: prevPropsVisible = true } = prevProps;
 
@@ -84,14 +72,8 @@ export class ShowOnlyAudibleTabsDemo extends React.Component<
   }
 
   public render() {
-    const {
-      visible,
-      platformInfo,
-      id = 'show-only-audible-tabs-demo',
-    } = this.props;
+    const { visible, id = 'show-only-audible-tabs-demo' } = this.props;
     const { done } = this.state;
-
-    const { os } = platformInfo;
 
     return (
       <div
@@ -115,7 +97,7 @@ export class ShowOnlyAudibleTabsDemo extends React.Component<
         >
           You can also use the shortcut{' '}
           <span className={styles['mute-toggle-combo']}>
-            <kbd>{keyLabels[ModifierKey.ALT][os]}</kbd>+<kbd>[1-9]</kbd>
+            <kbd>shift</kbd>+<kbd>[1-9]</kbd>
           </span>
           to toggle mute for a tab.
         </div>
@@ -123,5 +105,3 @@ export class ShowOnlyAudibleTabsDemo extends React.Component<
     );
   }
 }
-
-export default connector(ShowOnlyAudibleTabsDemo);
