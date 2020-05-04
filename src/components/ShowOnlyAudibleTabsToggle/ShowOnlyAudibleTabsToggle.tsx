@@ -12,7 +12,6 @@ import {
   showOnlyAudibleTabsIdentifer,
   keyLabels,
   ModifierKey,
-  consoleCommands,
 } from 'src/constants';
 
 import styles from './ShowOnlyAudibleTabsToggle.css';

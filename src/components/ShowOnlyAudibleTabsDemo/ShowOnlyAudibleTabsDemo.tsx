@@ -64,7 +64,7 @@ export default class ShowOnlyAudibleTabsDemo extends React.Component<
   }
 
   public render() {
-    const { visible, id = 'show-only-audible-tabs-demo', onDone } = this.props;
+    const { visible, id = 'show-only-audible-tabs-demo' } = this.props;
 
     return (
       <div

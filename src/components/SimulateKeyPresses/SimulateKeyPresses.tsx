@@ -201,10 +201,8 @@ export class SimulateKeyPresses extends React.Component<
       keyPresses,
       keysLayout = KeysLayout.HORIZONTAL,
       interactionType,
-      platformInfo,
     } = this.props;
     const keyCount = keyPresses.length;
-    const { os } = platformInfo;
 
     return (
       <div

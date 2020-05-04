@@ -70,7 +70,7 @@ export class PlaySomeSongs extends React.Component<
   };
 
   public render() {
-    const { visible, id = 'play-some-songs', onDone } = this.props;
+    const { visible, id = 'play-some-songs' } = this.props;
 
     return (
       <div

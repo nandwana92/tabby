@@ -62,7 +62,6 @@ export class SearchBox extends React.Component<TAllProps, ISearchBoxState> {
   componentDidUpdate(prevProps: TAllProps, prevState: ISearchBoxState) {
     const { searchInputValue: prevPropsSearchInputValue } = prevProps;
     const { searchInputValue: propsSearchInputValue } = this.props;
-    const { searchInputValue } = this.state;
 
     if (
       prevProps.isChromeOnSteroidsVisible !==

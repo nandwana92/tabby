@@ -15,7 +15,7 @@ export interface IFinProps {
 
 export interface IFinState {}
 
-export default class Fin extends React.Component<IFinProps, IFinState> {
+export default class Fin extends React.Component<IFinProps, {}> {
   constructor(props: IFinProps) {
     super(props);
 

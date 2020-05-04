@@ -121,7 +121,7 @@ function injectContentScriptInTab(tab: chrome.tabs.Tab) {
 
         chrome.tabs.create({
           url: iframeUrl,
-          index: tab.index,
+          index,
         });
       }
     }

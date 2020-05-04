@@ -126,7 +126,6 @@ export class Root extends React.Component<TAllProps, IRootState> {
         // This is not being used right now, as the polling takes care of
         // updating the state.
         case ActionTypes.MUTE_TOGGLED: {
-          const { data: tab } = request;
           this.getTabs();
 
           break;

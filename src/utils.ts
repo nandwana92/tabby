@@ -1,5 +1,4 @@
 import Fuse from 'fuse.js';
-import set from 'lodash/set';
 
 import { ActionTypes } from 'src/constants';
 import {
