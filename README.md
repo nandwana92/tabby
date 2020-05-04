@@ -18,8 +18,8 @@
 | Toggle Tez Popup                         |  <kbd>⌘</kbd>+<kbd>shift</kbd>+<kbd>space</kbd> <br/>⊞ <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>space</kbd> |
 | Toggle _audible tabs only_ view          |  <kbd>⌘</kbd>+<kbd>S</kbd> <br/>⊞ <kbd>ctrl</kbd>+<kbd>S</kbd>                                           |
 | Jump to last tab                         |  <kbd>⌘</kbd>+<kbd>shift</kbd>+<kbd>U</kbd> <br/>⊞ <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>U</kbd>         |
-| Switch to tab n (1 - 9) in results       | <kbd>shift</kbd>+<kbd>[1-9]</kbd>                                                                         |
-| Toggle mute for tab n (1 - 9) in results |  <kbd>⌥</kbd>+<kbd>[1-9]</kbd> <br/>⊞ <kbd>alt</kbd>+<kbd>[1-9]</kbd></kbd>                              |
+| Switch to tab n (1 - 9) in results       |  <kbd>⌥</kbd>+<kbd>[1-9]</kbd> <br/>⊞ <kbd>alt</kbd>+<kbd>[1-9]</kbd></kbd>                              |
+| Toggle mute for tab n (1 - 9) in results | <kbd>shift</kbd>+<kbd>[1-9]</kbd>                                                                         |
 
 ## Screenshots
 

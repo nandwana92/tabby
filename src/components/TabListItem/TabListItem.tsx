@@ -10,6 +10,7 @@ import {
   getHighlightedHTMLStrings,
 } from 'src/utils';
 import { IAppState } from 'src/types';
+import { keyLabels, ModifierKey } from 'src/constants';
 
 import styles from './TabListItem.css';
 
@@ -98,9 +99,11 @@ export class TabListItem extends React.Component<TAllProps, ITabListItemState> {
       iconUrl,
       websiteIconFilePath,
       className,
+      platformInfo,
       index = -1,
     } = this.props;
 
+    const { os } = platformInfo;
     const showKeyboardShortcut = index > -1 && index < 9;
     const item = tabFuseResult.item;
 
@@ -154,7 +157,7 @@ export class TabListItem extends React.Component<TAllProps, ITabListItemState> {
           </div>
           {showKeyboardShortcut ? (
             <React.Fragment>
-              <kbd>Shift</kbd>+<kbd>{index + 1}</kbd>
+              <kbd>{keyLabels[ModifierKey.ALT][os]}</kbd>+<kbd>{index + 1}</kbd>
             </React.Fragment>
           ) : null}
         </a>

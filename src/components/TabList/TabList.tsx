@@ -77,11 +77,11 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
     for (let i = 1; i < 10; i++) {
       const key = `${mousetrapKeyMappings[ModifierKey.ALT][os]}+${i}`;
 
-      Mousetrap.bind(key, this.handleToggleMuteButtonClick);
+      Mousetrap.bind(key, this.handleSwitchToTabKeyboardShortcut);
     }
 
     for (let i = 1; i < 10; i++) {
-      Mousetrap.bind(`shift+${i}`, this.handleSwitchToTabKeyboardShortcut);
+      Mousetrap.bind(`shift+${i}`, this.handleToggleMuteButtonClick);
     }
 
     Mousetrap.bind('down', (e: ExtendedKeyboardEvent, combo: string) => {
@@ -129,12 +129,7 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
     combo: string
   ) => {
     e.preventDefault();
-    const { platformInfo } = this.props;
-    const { os } = platformInfo;
-    const index =
-      os === OS.MAC
-        ? parseInt(combo.replace(/option\+/g, ''), 10) - 1
-        : parseInt(combo.replace(/alt\+/g, ''), 10) - 1;
+    const index = parseInt(combo.replace(/shift\+/g, ''), 10) - 1;
 
     if (index < this.props.tabs.length) {
       const tab = this.props.tabs[index];
@@ -147,7 +142,12 @@ export class TabList extends React.Component<TAllProps, ITabListState> {
     combo: string
   ) => {
     e.preventDefault();
-    const index = parseInt(combo.replace(/shift\+/g, ''), 10) - 1;
+    const { platformInfo } = this.props;
+    const { os } = platformInfo;
+    const index =
+      os === OS.MAC
+        ? parseInt(combo.replace(/option\+/g, ''), 10) - 1
+        : parseInt(combo.replace(/alt\+/g, ''), 10) - 1;
 
     if (index < this.props.tabs.length) {
       const tab = this.props.tabs[index];

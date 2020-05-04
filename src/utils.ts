@@ -178,11 +178,11 @@ function getInitialReduxState(
     },
     {
       label: `Jump to nth tab in the results`,
-      shortcut: `<kbd>shift</kbd>+<kbd>[1-9]</kbd>`,
+      shortcut: `<kbd>${keyLabels[ModifierKey.ALT][os]}</kbd>+<kbd>[1-9]</kbd>`,
     },
     {
       label: `Toggle mute for nth tab in the results`,
-      shortcut: `<kbd>${keyLabels[ModifierKey.ALT][os]}</kbd>+<kbd>[1-9]</kbd>`,
+      shortcut: `<kbd>shift</kbd>+<kbd>[1-9]</kbd>`,
     },
     {
       label: `Navigate through the list of tabs`,
