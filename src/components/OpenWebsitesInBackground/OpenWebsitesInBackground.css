@@ -1,0 +1,60 @@
+.open-websites-in-background {
+  align-self: flex-start;
+  margin-left: 64px;
+
+  .tap-open-prompt {
+    display: flex;
+  }
+
+  .open-tabs-button {
+    align-self: center;
+    display: flex;
+    align-items: center;
+    margin-left: 12px;
+    padding: 0 12px;
+
+    .go-icon {
+      margin-left: 8px;
+      height: 18px;
+      animation-name: pulse;
+      animation-duration: 0.5s;
+      animation-timing-function: ease-out;
+      animation-direction: alternate;
+      animation-iteration-count: infinite;
+    }
+  }
+
+  .loading {
+    animation: pulse 0.5s infinite;
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  .icon-and-url-container {
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .url {
+    font-size: 14px;
+    color: #551a8b;
+  }
+
+  .icon {
+    height: 24px;
+    margin-right: 12px;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(5px);
+  }
+}

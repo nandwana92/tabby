@@ -1,9 +1,8 @@
 import Fuse from 'fuse.js';
-import set from 'lodash/set';
 
 import { ActionTypes } from 'src/constants';
 import {
-  Keys,
+  ModifierKey,
   keyLabels,
   defaultFilename,
   partialHostnameToFilenameMapping,
@@ -11,7 +10,10 @@ import {
 import { IAppState } from 'src/types';
 
 function getFilenameFromURL(url?: string): string {
-  if (typeof url === 'undefined') {
+  if (
+    typeof url === 'undefined' ||
+    (typeof url === 'string' && url.length === 0)
+  ) {
     return defaultFilename;
   }
 
@@ -34,6 +36,11 @@ function getFilenameFromURL(url?: string): string {
   }
 
   return defaultFilename;
+}
+
+// Duration is the duration of time to sleep for in milliseconds.
+function sleep(duration: number): Promise<undefined> {
+  return new Promise((resolve) => setTimeout(resolve, duration));
 }
 
 function getWebsiteIconPathFromFilename(filename: string): string {
@@ -79,6 +86,10 @@ function setActiveTab(tabId: number) {
     type: ActionTypes.SET_ACTIVE_TAB,
     data: tabId,
   });
+}
+
+function getTabs() {
+  chrome.runtime.sendMessage({ type: ActionTypes.GET_TABS_REQUEST });
 }
 
 function dispatchToggleVisibilityAction() {
@@ -142,44 +153,57 @@ function getInitialReduxState(
 ): IAppState {
   const { os } = platformInfo;
 
+  // For some weird reason, the down arrow is rendering much bigger than the up
+  // arrow. So inverting up arrow as a workaround 🤷🏼‍♂️.
   const keyboardShortcuts = [
     {
       label: `Toggle Tez's visibility`,
       shortcut: `<kbd>${
-        keyLabels[Keys.COMMAND][os]
-      }</kbd>+<kbd>Shift</kbd>+<kbd>Space</kbd>`,
+        keyLabels[ModifierKey.META][os]
+      }</kbd>+<kbd>shift</kbd>+<kbd>space</kbd>`,
     },
     {
       label: `Jump back to previous tab`,
       shortcut: `<kbd>${
-        keyLabels[Keys.COMMAND][os]
-      }</kbd>+<kbd>Shift</kbd>+<kbd>U</kbd>`,
+        keyLabels[ModifierKey.META][os]
+      }</kbd>+<kbd>shift</kbd>+<kbd>U</kbd>`,
     },
     {
       label: `Toggle <i>Audible Tabs Only</i> switch`,
-      shortcut: `<kbd>${keyLabels[Keys.COMMAND][os]}</kbd>+<kbd>S</kbd>`,
+      shortcut: `<kbd>${keyLabels[ModifierKey.META][os]}</kbd>+<kbd>S</kbd>`,
     },
     {
       label: `Jump to nth tab in the results`,
-      shortcut: `<kbd>Shift</kbd>+<kbd>[1-9]</kbd>`,
+      shortcut: `<kbd>shift</kbd>+<kbd>[1-9]</kbd>`,
     },
     {
       label: `Toggle mute for nth tab in the results`,
-      shortcut: `<kbd>${keyLabels[Keys.OPTION][os]}</kbd>+<kbd>[1-9]</kbd>`,
+      shortcut: `<kbd>${keyLabels[ModifierKey.ALT][os]}</kbd>+<kbd>[1-9]</kbd>`,
+    },
+    {
+      label: `Navigate through the list of tabs`,
+      shortcut: `<kbd><span>▲<span></kbd> / <kbd><span style="transform: rotate(180deg); display: flex;">▲<span></kbd>`,
+    },
+    {
+      label: `Jump to the highlighted tab in the list`,
+      shortcut: `<kbd>${keyLabels[ModifierKey.ENTER][os]}</kbd>`,
     },
   ];
 
   return {
     showAudibleTabsOnly: false,
     isChromeOnSteroidsVisible: false,
+    searchInputValue: '',
     platformInfo,
     keyboardShortcuts,
   };
 }
 
 export {
+  sleep,
   getFilenameFromURL,
   getWebsiteIconPathFromFilename,
+  getTabs,
   handleToggleMuteButtonClick,
   dispatchToggleVisibilityAction,
   jumpToTab,

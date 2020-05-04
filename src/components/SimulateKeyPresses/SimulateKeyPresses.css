@@ -1,0 +1,24 @@
+.simulate-key-presses {
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &.vertical {
+    flex-direction: column;
+
+    .keyboard-key {
+      flex: none;
+      margin-bottom: 2px;
+    }
+  }
+
+  .plus {
+    height: 18px;
+    margin: 12px;
+
+    &.invisible {
+      visibility: hidden;
+    }
+  }
+}

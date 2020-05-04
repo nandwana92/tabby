@@ -1,0 +1,119 @@
+.guide {
+  padding: 48px 0;
+
+  h1 {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .sections-container {
+    display: flex;
+
+    .left {
+      padding: 0 24px 256px;
+      font-size: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 128px;
+      flex: 1;
+
+      .show-next-section-button-container {
+        align-self: stretch;
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 24px;
+        border-top: 2px dashed lightgrey;
+        padding: 24px;
+        opacity: 0;
+        visibility: hidden;
+        transition-property: opacity visibility;
+        transition-duration: 0.5s;
+        transition-timing-function: ease-in;
+
+        &.visible {
+          opacity: 1;
+          visibility: visible;
+        }
+
+        .pulse-animation {
+          animation: pulse 2s infinite;
+        }
+      }
+    }
+
+    .right {
+      flex: 1;
+
+      .annotation-container {
+        position: fixed;
+        top: 200px;
+        z-index: 1;
+        width: 50vw;
+
+        .annotation {
+          max-width: 75%;
+          position: absolute;
+          z-index: 1;
+          pointer-events: none;
+          opacity: 0;
+          transition-property: opacity;
+          transition-duration: 0.5s;
+          transition-timing-function: ease-in;
+
+          &.visible {
+            opacity: 1;
+          }
+        }
+
+        .search-input-box-guide {
+          right: 200px;
+          bottom: -40px;
+        }
+
+        .jump-to-tab-guide {
+          right: 120px;
+          bottom: -108px;
+        }
+
+        .show-only-audible-tabs-guide {
+          left: 0;
+          bottom: -90px;
+        }
+      }
+
+      .root-container {
+        position: fixed;
+        top: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        max-width: 50vw;
+        height: 100vh;
+        opacity: 0;
+        visibility: hidden;
+        transition-property: opacity visibility;
+        transition-duration: 0.2s;
+        transition-timing-function: ease-in;
+
+        &.visible {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    border-color: #f8f8f8;
+  }
+  50% {
+    border-color: #cad9fc;
+  }
+  100% {
+    border-color: #f8f8f8;
+  }
+}

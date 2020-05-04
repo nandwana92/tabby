@@ -13,13 +13,13 @@
 
 ## Keyboard shortcuts
 
-| What?                                    	| How?                                                                                                      	|
-|------------------------------------------	|-----------------------------------------------------------------------------------------------------------	|
-| Toggle Tez Popup                         	|  <kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>Space</kbd> <br/>⊞ <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Space</kbd> 	|
-| Toggle _audible tabs only_ view          	|  <kbd>⌘</kbd>+<kbd>S</kbd> <br/>⊞ <kbd>Ctrl</kbd>+<kbd>S</kbd>                                           	|
-| Jump to last tab                         	|  <kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>U</kbd> <br/>⊞ <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>U</kbd>         	|
-| Switch to tab n (1 - 9) in results       	| <kbd>Shift</kbd>+<kbd>[1-9]</kbd>                                                                         	|
-| Toggle mute for tab n (1 - 9) in results 	|  <kbd>⌥</kbd>+<kbd>[1-9]</kbd> <br/>⊞ <kbd>Alt</kbd>+<kbd>[1-9]</kbd></kbd>                              	|
+| What?                                    | How?                                                                                                      |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Toggle Tez Popup                         |  <kbd>⌘</kbd>+<kbd>shift</kbd>+<kbd>space</kbd> <br/>⊞ <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>space</kbd> |
+| Toggle _audible tabs only_ view          |  <kbd>⌘</kbd>+<kbd>S</kbd> <br/>⊞ <kbd>ctrl</kbd>+<kbd>S</kbd>                                           |
+| Jump to last tab                         |  <kbd>⌘</kbd>+<kbd>shift</kbd>+<kbd>U</kbd> <br/>⊞ <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>U</kbd>         |
+| Switch to tab n (1 - 9) in results       | <kbd>shift</kbd>+<kbd>[1-9]</kbd>                                                                         |
+| Toggle mute for tab n (1 - 9) in results |  <kbd>⌥</kbd>+<kbd>[1-9]</kbd> <br/>⊞ <kbd>alt</kbd>+<kbd>[1-9]</kbd></kbd>                              |
 
 ## Screenshots
 

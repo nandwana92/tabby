@@ -1,8 +1,57 @@
 export interface IAppState {
   showAudibleTabsOnly: boolean;
   isChromeOnSteroidsVisible: boolean;
+  searchInputValue: string;
   platformInfo: chrome.runtime.PlatformInfo;
   keyboardShortcuts: IShortcutItem[];
+}
+
+// This is not an exhaustive list. Values will be added as and when they get
+// start being used.
+export enum Key {
+  META = 'META',
+  ALT = 'ALT',
+  SHIFT = 'SHIFT',
+  SPACE = 'SPACE',
+  A = 'A',
+  B = 'B',
+  C = 'C',
+  D = 'D',
+  E = 'E',
+  F = 'F',
+  G = 'G',
+  H = 'H',
+  I = 'I',
+  J = 'J',
+  K = 'K',
+  L = 'L',
+  M = 'M',
+  N = 'N',
+  O = 'O',
+  P = 'P',
+  Q = 'Q',
+  R = 'R',
+  S = 'S',
+  T = 'T',
+  U = 'U',
+  V = 'V',
+  W = 'W',
+  X = 'X',
+  Y = 'Y',
+  Z = 'Z',
+}
+
+export interface ISectionComponentProps {
+  id: string;
+  [x: string]: any;
+}
+
+export interface ISectionComponentWithProps {
+  component: React.ComponentType<any>;
+  props: ISectionComponentProps;
+  manual?: boolean;
+  annotationImage?: string;
+  positioningClass?: string;
 }
 
 export interface IShortcutItem {
@@ -15,6 +64,26 @@ export enum ModeTypes {
   CONSOLE = 'CONSOLE',
 }
 
+export enum AsyncStatus {
+  INIT = 'INIT',
+  LOADING = 'LOADING',
+  SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR',
+}
+
+export enum ExtensionInstallationReason {
+  INSTALL = 'install',
+  UPDATE = 'update',
+  CHROME_UPDATE = 'chrome_update',
+  SHARED_MODULE_UPDATE = 'shared_module_update',
+}
+
+export interface WebsiteInfo {
+  title: string;
+  url: string;
+  logoKey: string;
+}
+
 /**
  * Types for Actions
  */
@@ -24,6 +93,8 @@ export const UPDATE_IS_CHROME_ON_STEROIDS_VISIBLE_VALUE =
 
 export const UPDATE_SHOW_AUDIBLE_TABS_ONLY_FLAG_VALUE =
   'UPDATE_SHOW_AUDIBLE_TABS_ONLY_FLAG_VALUE';
+
+export const UPDATE_SEARCH_INPUT_VALUE = 'UPDATE_SEARCH_INPUT_VALUE';
 
 export type UpdateIsChromeOnSteroidsVisibleFlagValue = {
   type: typeof UPDATE_IS_CHROME_ON_STEROIDS_VISIBLE_VALUE;
@@ -35,9 +106,15 @@ export type UpdateShowAudibleTabsOnlyFlagValue = {
   payload: boolean;
 };
 
+export type UpdateSearchInputValue = {
+  type: typeof UPDATE_SEARCH_INPUT_VALUE;
+  payload: string;
+};
+
 export type AppActions =
   | UpdateIsChromeOnSteroidsVisibleFlagValue
-  | UpdateShowAudibleTabsOnlyFlagValue;
+  | UpdateShowAudibleTabsOnlyFlagValue
+  | UpdateSearchInputValue;
 
 /**
  * Types for Messages
@@ -58,6 +135,7 @@ export const TOGGLE_MUTE = 'TOGGLE_MUTE';
 export const MUTE_TOGGLED = 'MUTE_TOGGLED';
 export const TOGGLE_VISIBILITY = 'TOGGLE_VISIBILITY';
 export const DISPATCH_TOGGLE_VISIBILITY = 'DISPATCH_TOGGLE_VISIBILITY';
+export const OPEN_URLS_IN_BACKGROUND = 'OPEN_URLS_IN_BACKGROUND';
 
 export type GetTabsRequestMessage = {
   type: typeof GET_TABS_REQUEST;
@@ -136,6 +214,11 @@ export type ToggleVisibilityMessage = {
   type: typeof TOGGLE_VISIBILITY;
 };
 
+export type OpenUrlsInBackground = {
+  type: typeof OPEN_URLS_IN_BACKGROUND;
+  data: string[];
+};
+
 export type MessageTypes =
   | GetTabsRequestMessage
   | GetTabsSuccessMessage
@@ -151,4 +234,5 @@ export type MessageTypes =
   | ToggleMuteMessage
   | MuteToggledMessage
   | ToggleVisibilityMessage
-  | DispatchToggleVisibilityMessage;
+  | DispatchToggleVisibilityMessage
+  | OpenUrlsInBackground;

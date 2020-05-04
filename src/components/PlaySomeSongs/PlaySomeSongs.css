@@ -1,0 +1,53 @@
+.play-some-songs {
+  margin-top: 64px;
+  padding: 0 32px;
+  opacity: 0;
+  visibility: hidden;
+  transition-property: opacity visibility;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in;
+  transition-delay: 0.8s;
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  ul {
+    list-style: none;
+
+    .icon-and-title-container {
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .title {
+      font-size: 14px;
+      cursor: pointer;
+      border-bottom: 1px dashed #428dff;
+
+      &:hover {
+        border-bottom: 1px dashed #fd5a5a;
+      }
+    }
+
+    .icon {
+      height: 24px;
+      margin-right: 12px;
+    }
+  }
+}
+
+.unstyled-anchor-tag {
+  &:link,
+  &:visited {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: auto;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}

@@ -7,6 +7,7 @@ module.exports = {
   devtool: 'inline-source-map',
   entry: {
     main: path.join(__dirname, srcDir, 'main.tsx'),
+    howToUse: path.join(__dirname, srcDir, 'howToUse.tsx'),
     background: path.join(__dirname, srcDir, 'background.ts'),
     contentScript: path.join(__dirname, srcDir, 'contentScript.ts'),
     contentScriptInjected: path.join(

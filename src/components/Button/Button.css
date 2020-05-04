@@ -1,0 +1,23 @@
+.button {
+  all: unset;
+  position: relative;
+  border: 2px solid #f8f8f8;
+  border-radius: 4px;
+  padding: 2px 8px;
+  background-color: #f8f8f8;
+  box-shadow: 2px 2px 2px 0px #bdbdbd;
+  cursor: pointer;
+
+  &:active:enabled {
+    top: 2px;
+    box-shadow: none;
+  }
+
+  &:focus {
+    border-color: #428dff;
+  }
+
+  &:disabled {
+    color: darkgray;
+  }
+}
