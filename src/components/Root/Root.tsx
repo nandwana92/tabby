@@ -44,6 +44,8 @@ type TAllProps = PropsFromRedux & IRootProps;
 export interface IRootState {
   searchInputValue: string;
   modeType: ModeTypes;
+  recentlyAudibleTabs: Fuse.FuseResult<chrome.tabs.Tab>[];
+  recentlyAudibleTabsFuzzySearchResults: Fuse.FuseResult<chrome.tabs.Tab>[];
   tabs: Fuse.FuseResult<chrome.tabs.Tab>[];
   fuzzySearchResults: Fuse.FuseResult<chrome.tabs.Tab>[];
   consoleModeFuzzySearchResults: Fuse.FuseResult<string>[];
@@ -51,6 +53,10 @@ export interface IRootState {
 
 export class Root extends React.Component<TAllProps, IRootState> {
   private consoleModeFuse = new Fuse<string, {}>(consoleCommands);
+  private recentlyAudibleTabsFuse = new Fuse<chrome.tabs.Tab, {}>(
+    [],
+    fuseOptions
+  );
   private fuse = new Fuse<chrome.tabs.Tab, {}>([], fuseOptions);
   private pollingItervalId: NodeJS.Timeout | null = null;
 
@@ -59,8 +65,10 @@ export class Root extends React.Component<TAllProps, IRootState> {
 
     this.state = {
       searchInputValue: '',
-      tabs: [],
       modeType: ModeTypes.DEFAULT,
+      recentlyAudibleTabs: [],
+      recentlyAudibleTabsFuzzySearchResults: [],
+      tabs: [],
       fuzzySearchResults: [],
       consoleModeFuzzySearchResults: [],
     };
@@ -103,11 +111,23 @@ export class Root extends React.Component<TAllProps, IRootState> {
 
         case ActionTypes.GET_TABS_SUCCESS: {
           const { searchInputValue } = this.state;
-          const { data: tabs } = request;
+          const {
+            data: { allTabs: tabs, recentlyAudibleTabs },
+          } = request;
           this.fuse = new Fuse(tabs, fuseOptions);
+          this.recentlyAudibleTabsFuse = new Fuse(
+            recentlyAudibleTabs,
+            fuseOptions
+          );
 
           if (this.state.searchInputValue.trim() !== '') {
             this.setState({
+              recentlyAudibleTabs: transformIntoFuseResultLikeShape(
+                recentlyAudibleTabs
+              ),
+              recentlyAudibleTabsFuzzySearchResults: this.recentlyAudibleTabsFuse.search<
+                chrome.tabs.Tab
+              >(searchInputValue),
               tabs: transformIntoFuseResultLikeShape(tabs),
               fuzzySearchResults: this.fuse.search<chrome.tabs.Tab>(
                 searchInputValue
@@ -115,6 +135,10 @@ export class Root extends React.Component<TAllProps, IRootState> {
             });
           } else {
             this.setState({
+              recentlyAudibleTabs: transformIntoFuseResultLikeShape(
+                recentlyAudibleTabs
+              ),
+              recentlyAudibleTabsFuzzySearchResults: [],
               tabs: transformIntoFuseResultLikeShape(tabs),
               fuzzySearchResults: [],
             });
@@ -228,7 +252,12 @@ export class Root extends React.Component<TAllProps, IRootState> {
         <NoResults modeType={modeType} />
       ) : null;
     } else {
-      const { tabs, fuzzySearchResults } = this.state;
+      const {
+        tabs,
+        fuzzySearchResults,
+        recentlyAudibleTabs,
+        recentlyAudibleTabsFuzzySearchResults,
+      } = this.state;
       const { showAudibleTabsOnly } = this.props;
 
       const filteredTabs = (isSearchQueryPresent
@@ -236,10 +265,20 @@ export class Root extends React.Component<TAllProps, IRootState> {
         : tabs
       ).filter((item) => !showAudibleTabsOnly || item.item.audible);
 
-      const nonEmptyResults = filteredTabs.length > 0;
+      const filteredRecentlyAudibleTabs = showAudibleTabsOnly
+        ? isSearchQueryPresent
+          ? recentlyAudibleTabsFuzzySearchResults
+          : recentlyAudibleTabs
+        : [];
+
+      const nonEmptyResults =
+        filteredTabs.length > 0 || filteredRecentlyAudibleTabs.length > 0;
 
       return nonEmptyResults ? (
-        <TabList tabs={filteredTabs} />
+        <TabList
+          tabs={filteredTabs}
+          recentlyAudibleTabs={filteredRecentlyAudibleTabs}
+        />
       ) : areFiltersApplied ? (
         <NoResults modeType={modeType} />
       ) : null;

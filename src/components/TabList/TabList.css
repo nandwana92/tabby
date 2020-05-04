@@ -9,4 +9,28 @@
   .highlighted {
     border: 2px solid #428dff !important;
   }
+
+  .recently-audible-section-title-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 32px;
+    margin-bottom: 12px;
+
+    .icon {
+      z-index: 1;
+      position: absolute;
+      top: -10px;
+      height: 128px;
+      opacity: 0.05;
+      transform: rotate(-20deg);
+      pointer-events: none;
+    }
+
+    .title {
+      margin-left: 12px;
+      font-size: 14px;
+    }
+  }
 }
