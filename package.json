@@ -51,7 +51,7 @@
     }
   },
   "lint-staged": {
-    "*": "prettier --write"
+    "*.{html, css, js, ts, tsx, json, md}": "prettier --write"
   },
   "config": {
     "commitizen": {
