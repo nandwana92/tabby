@@ -1,7 +1,7 @@
 {
   "name": "Zet",
   "version": "0.1.0",
-  "description": "Supercharge your Chrome experience.",
+  "description": "Supercharge your Chrome experience. Makes switching to tabs and muting unmuting them snappier.",
   "manifest_version": 2,
   "permissions": ["activeTab", "tabs"],
   "background": {
