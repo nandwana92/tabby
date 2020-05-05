@@ -31,7 +31,7 @@
 
 _Search for an open tab_
 
-<img src="https://user-images.githubusercontent.com/36832784/81068724-77256c00-8efe-11ea-856e-f88475e19611.png" width="512">
+<img src="https://user-images.githubusercontent.com/36832784/81069861-1860f200-8f00-11ea-8f0c-8751fb1b587e.png" width="512">
 
 _Show currently and recently audible tabs_
 
