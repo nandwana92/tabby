@@ -8,9 +8,11 @@ import {
   handleToggleMuteButtonClick,
   dispatchToggleVisibilityAction,
   getHighlightedHTMLStrings,
+  getFilenameFromURL,
+  getWebsiteIconPathFromFilename,
 } from 'src/utils';
 import { IAppState } from 'src/types';
-import { keyLabels, ModifierKey } from 'src/constants';
+import { keyLabels, ModifierKey, iconUrls } from 'src/constants';
 
 import styles from './TabListItem.css';
 
@@ -23,12 +25,10 @@ const connector = connect(mapState);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export interface ITabListItemProps {
-  showAudibleIcon: boolean;
   tabFuseResult: Fuse.FuseResult<chrome.tabs.Tab>;
-  iconUrl: string;
-  websiteIconFilePath: string;
   isHighlighted: boolean;
   containerRef: React.RefObject<HTMLElement>;
+  isRecentlyAudibleTab?: boolean;
   index?: number;
   onFocus?: (node: HTMLLIElement) => void;
   className?: string;
@@ -74,6 +74,14 @@ export class TabListItem extends React.Component<TAllProps, ITabListItemState> {
     }
   }
 
+  private getUrl(tab: chrome.tabs.Tab): string | undefined {
+    if (typeof tab.url === 'string' && tab.url.length > 0) {
+      return tab.url;
+    }
+
+    return tab.pendingUrl;
+  }
+
   private handleToggleMuteButtonClick = (tab: chrome.tabs.Tab) => (
     e: React.SyntheticEvent<HTMLElement>
   ) => {
@@ -94,12 +102,10 @@ export class TabListItem extends React.Component<TAllProps, ITabListItemState> {
 
   public render() {
     const {
-      showAudibleIcon,
       tabFuseResult,
-      iconUrl,
-      websiteIconFilePath,
       className,
       platformInfo,
+      isRecentlyAudibleTab = false,
       index = -1,
     } = this.props;
 
@@ -114,6 +120,15 @@ export class TabListItem extends React.Component<TAllProps, ITabListItemState> {
 
     const title = highlightedHTMLStrings.title || item.title || '';
     const url = highlightedHTMLStrings.url || item.url || '';
+
+    const muted = item.mutedInfo?.muted === true;
+    const showAudibleIcon = item.audible === true;
+    const iconUrl = muted ? iconUrls.mute : iconUrls.volume;
+    const websiteIconFilename = getFilenameFromURL(this.getUrl(item));
+    const websiteIconFilePath =
+      websiteIconFilename !== 'default' || !item.favIconUrl
+        ? getWebsiteIconPathFromFilename(websiteIconFilename)
+        : item.favIconUrl;
 
     return (
       <li

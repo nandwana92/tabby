@@ -13,6 +13,7 @@ export interface IOpenWebsitesInBackgroundProps {
   id?: string;
   onDone?: () => void;
   visible?: boolean;
+  done?: boolean;
 }
 
 export interface IOpenWebsitesInBackgroundState {

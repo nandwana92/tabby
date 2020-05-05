@@ -27,6 +27,7 @@ export interface ISimulatedSearchProps {
   id?: string;
   onDone?: () => void;
   visible?: boolean;
+  done?: boolean;
 }
 
 export interface ISimulatedSearchState {

@@ -41,6 +41,12 @@ export enum Key {
   Z = 'Z',
 }
 
+export interface RecentlyAudibleTab {
+  tab: chrome.tabs.Tab;
+  timeoutId: NodeJS.Timeout;
+  timestamp: number;
+}
+
 export interface ISectionComponentProps {
   id: string;
   [x: string]: any;
@@ -143,7 +149,10 @@ export type GetTabsRequestMessage = {
 
 export type GetTabsSuccessMessage = {
   type: typeof GET_TABS_SUCCESS;
-  data: chrome.tabs.Tab[];
+  data: {
+    allTabs: chrome.tabs.Tab[];
+    recentlyAudibleTabs: chrome.tabs.Tab[];
+  };
 };
 
 export type SetFocussedWindowMessage = {

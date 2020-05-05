@@ -3,6 +3,7 @@ import {
   iframeUrl,
   howToUsePageUrl,
   contentScriptInjectedPath,
+  RECENTLY_AUDIBLE_CUT_OFF,
 } from 'src/constants';
 import {
   sendMessageToActiveTab,
@@ -21,10 +22,10 @@ import {
   TAB_UPDATED,
   TOGGLE_MUTE,
   MUTE_TOGGLED,
-  TOGGLE_VISIBILITY,
   DISPATCH_TOGGLE_VISIBILITY,
   OPEN_URLS_IN_BACKGROUND,
   ExtensionInstallationReason,
+  RecentlyAudibleTab,
 } from 'src/types';
 
 let lastActiveTab: chrome.tabs.Tab | null = null;
@@ -33,6 +34,8 @@ let lastFocussedWindowId: number | null = null;
 let currentlyFocussedWindowId: number | null = null;
 let lastFocussedRealWindowId: number | null = null;
 let currentlyFocussedRealWindowId: number | null = null;
+
+const mapOfRecentlyAudibleTabs: Record<number, RecentlyAudibleTab> = {};
 
 chrome.commands.onCommand.addListener((command) => {
   switch (command) {
@@ -235,9 +238,28 @@ chrome.runtime.onMessage.addListener(
 
       case GET_TABS_REQUEST: {
         chrome.tabs.query({}, (tabs) => {
+          const recentlyAudibleTabs = [];
+
+          for (const tab of tabs) {
+            const { id, audible = false } = tab;
+
+            if (typeof id === 'undefined') {
+              continue;
+            }
+
+            if (id in mapOfRecentlyAudibleTabs && !audible) {
+              recentlyAudibleTabs.push(mapOfRecentlyAudibleTabs[id]);
+            }
+          }
+
           sendMessageToActiveTab({
             type: GET_TABS_SUCCESS,
-            data: tabs,
+            data: {
+              allTabs: tabs,
+              recentlyAudibleTabs: recentlyAudibleTabs
+                .sort((a, b) => b.timestamp - a.timestamp)
+                .map((item) => item.tab),
+            },
           });
         });
 
@@ -256,6 +278,18 @@ chrome.tabs.onUpdated.addListener(
     changeInfo: chrome.tabs.TabChangeInfo,
     tab: chrome.tabs.Tab
   ) => {
+    const { audible } = changeInfo;
+
+    if (typeof audible !== 'undefined') {
+      if (audible) {
+        if (tabId in mapOfRecentlyAudibleTabs) {
+          removeTabFromRecentlyAudibleTabs(tabId);
+        }
+      } else {
+        addToRecentlyAudibleTabs(tab);
+      }
+    }
+
     sendMessageToActiveTab({
       type: TAB_UPDATED,
       data: {
@@ -368,4 +402,24 @@ function openUrlsInNewTabsInBackground(listOfUrls: string[]) {
   }
 
   return tabCreationPromises;
+}
+
+function removeTabFromRecentlyAudibleTabs(tabId: number) {
+  delete mapOfRecentlyAudibleTabs[tabId];
+}
+
+function addToRecentlyAudibleTabs(tab: chrome.tabs.Tab) {
+  const { id } = tab;
+
+  if (typeof id === 'undefined') {
+    return;
+  }
+
+  mapOfRecentlyAudibleTabs[id] = {
+    tab,
+    timestamp: Date.now(),
+    timeoutId: setTimeout(() => {
+      removeTabFromRecentlyAudibleTabs(id);
+    }, RECENTLY_AUDIBLE_CUT_OFF),
+  };
 }

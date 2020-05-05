@@ -6,6 +6,7 @@
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "watch": "webpack --config webpack.config.js --watch",
+    "create-archive": "npm run build && node build/create-archive.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -42,7 +43,9 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "archiver": "^4.0.1",
+    "dateformat": "^3.0.3"
   },
   "husky": {
     "hooks": {

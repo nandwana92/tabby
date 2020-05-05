@@ -14,6 +14,7 @@ export interface IOpenTezDemoProps {
   id?: string;
   onDone?: () => void;
   visible?: boolean;
+  done?: boolean;
 }
 
 export interface IOpenTezDemoState {

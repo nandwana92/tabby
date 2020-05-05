@@ -5,26 +5,35 @@
 ## Highlights
 
 - Gives a familiar macOS Spotlight like interface to quickly jump between tabs across windows.
-- Jump to a tab and quickly return to where you were for replying that quick message or changing the song.
+- Jump to a tab and quickly return to where you were for replying to that quick message or changing a song.
 - Fuzzy search in all the open tabs across windows. Search on the title or URL of the tabs.
 - Quickly mute-unmute tabs from a filtered down list of tabs which are audible.
+- See the tabs which aren't audible now but were a while back. This is useful for times like when you want to reply to a message you got a couple of minutes back.
 - Highly accessible. Completely navigable usable just your keyboard.
 - Keyboard shortcuts for switching to a tab, toggling mute of a tab, jumping back to the last tab, etc.
 
 ## Keyboard shortcuts
 
-| What?                                    | How?                                                                                                      |
-| ---------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Toggle Tez Popup                         |  <kbd>⌘</kbd>+<kbd>shift</kbd>+<kbd>space</kbd> <br/>⊞ <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>space</kbd> |
-| Toggle _audible tabs only_ view          |  <kbd>⌘</kbd>+<kbd>S</kbd> <br/>⊞ <kbd>ctrl</kbd>+<kbd>S</kbd>                                           |
-| Jump to last tab                         |  <kbd>⌘</kbd>+<kbd>shift</kbd>+<kbd>U</kbd> <br/>⊞ <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>U</kbd>         |
-| Switch to tab n (1 - 9) in results       |  <kbd>⌥</kbd>+<kbd>[1-9]</kbd> <br/>⊞ <kbd>alt</kbd>+<kbd>[1-9]</kbd></kbd>                              |
-| Toggle mute for tab n (1 - 9) in results | <kbd>shift</kbd>+<kbd>[1-9]</kbd>                                                                         |
+| What?                                   | How?                                                                                                            |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Toggle Tez's visibility                 | <kbd>⌘</kbd> + <kbd>shift</kbd> + <kbd>space</kbd>  <br/><kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>space</kbd> |
+| Close Tez                               | <kbd>esc</kbd>                                                                                                  |
+| Toggle Audible Tabs Only view           | <kbd>⌘</kbd> + <kbd>S</kbd>  <br/><kbd>ctrl</kbd> + <kbd>S</kbd>                                               |
+| Jump back to previous tab               | <kbd>⌘</kbd> + <kbd>shift</kbd> + <kbd>U</kbd>  <br/><kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>U</kbd>         |
+| Jump to nth tab in the results          | <kbd>⌥</kbd> + <kbd>[1-9]</kbd>  <br/><kbd>alt</kbd> + <kbd>[1-9]</kbd></kbd>                                  |
+| Toggle mute for nth tab in the results  | <kbd>shift</kbd> + <kbd>[1-9]</kbd>                                                                             |
+| Navigate through the list of tabs       | <kbd>▲</kbd> / <kbd>▼</kbd>                                                                                     |
+| Jump to the highlighted tab in the list | <kbd>return</kbd> + <kbd>S</kbd>  <br/><kbd>enter</kbd>                                                        |
 
 ## Screenshots
 
-<img src="https://user-images.githubusercontent.com/36832784/80614638-5079b800-8a5c-11ea-90ea-e3e65111801b.png" width="512">
-<img src="https://user-images.githubusercontent.com/36832784/80614655-553e6c00-8a5c-11ea-8fc4-647099486ba3.png" width="512">
+<img src="https://user-images.githubusercontent.com/36832784/81068702-6bd24080-8efe-11ea-9733-2d68d28c1029.png" width="512">
+
+_Search for an open tab_
+
+<img src="https://user-images.githubusercontent.com/36832784/81069861-1860f200-8f00-11ea-8f0c-8751fb1b587e.png" width="512">
+
+_Show currently and recently audible tabs_
 
 ## Setup for local development
 

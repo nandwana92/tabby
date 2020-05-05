@@ -8,6 +8,7 @@
     height: 256px;
     opacity: 0.02;
     transform: rotate(-20deg);
+    pointer-events: none;
   }
 
   table {

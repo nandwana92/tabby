@@ -23,6 +23,7 @@ export const iconUrls = {
   star: chrome.runtime.getURL('images/star.svg'),
   mute: chrome.runtime.getURL('images/mute.svg'),
   next: chrome.runtime.getURL('images/next.svg'),
+  recentlyAudible: chrome.runtime.getURL('images/recently-audible.svg'),
   fourOFour: chrome.runtime.getURL('images/404.svg'),
   keyboard: chrome.runtime.getURL('images/keyboard.svg'),
   searchInputBoxGuide: chrome.runtime.getURL(
@@ -43,6 +44,7 @@ export enum KeyboardShortcuts {
 }
 
 export const AUDIBLE_TABS_POLL_FREQUENCY_IN_MS = 1000;
+export const RECENTLY_AUDIBLE_CUT_OFF = 5 * 60 * 1000;
 export const contentScriptInjectedPath = 'dist/contentScriptInjected.js';
 export const iframeUrl = chrome.runtime.getURL('tez.html');
 export const howToUsePageUrl = chrome.runtime.getURL('how-to-use.html');
