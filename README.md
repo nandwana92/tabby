@@ -23,7 +23,7 @@
 | Jump to nth tab in the results          | <kbd>⌥</kbd> + <kbd>[1-9]</kbd>  <br/><kbd>alt</kbd> + <kbd>[1-9]</kbd></kbd>                                  |
 | Toggle mute for nth tab in the results  | <kbd>shift</kbd> + <kbd>[1-9]</kbd>                                                                             |
 | Navigate through the list of tabs       | <kbd>▲</kbd> / <kbd>▼</kbd>                                                                                     |
-| Jump to the highlighted tab in the list | <kbd>return</kbd> + <kbd>S</kbd>  <br/><kbd>enter</kbd>                                                        |
+| Jump to the highlighted tab in the list | <kbd>return</kbd>  <br/><kbd>enter</kbd>                                                                       |
 
 ## Screenshots
 
