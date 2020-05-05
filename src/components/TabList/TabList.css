@@ -23,8 +23,8 @@
       position: absolute;
       top: -10px;
       height: 128px;
-      opacity: 0.05;
-      transform: rotate(-20deg);
+      opacity: 0.1;
+      transform: rotate(-20deg) translateX(80px);
       pointer-events: none;
     }
 

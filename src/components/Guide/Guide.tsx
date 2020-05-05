@@ -152,12 +152,24 @@ export default class Guide extends React.Component<IGuideProps, IGuideState> {
                 manual &&
                 index === doneTillSectionNumber &&
                 doneTillSectionNumber === showTillSectionNumber;
+              const lessOpaque =
+                index < showTillSectionNumber &&
+                doneTillSectionNumber !== sectionComponents.length - 1;
 
               return (
-                <React.Fragment key={index}>
+                <div
+                  key={index}
+                  className={cx(styles['section-container'], {
+                    [styles['less-opaque']]: lessOpaque,
+                  })}
+                >
                   <Component
                     {...props}
                     onDone={this.onDone}
+                    done={
+                      index < showTillSectionNumber &&
+                      index <= doneTillSectionNumber
+                    }
                     visible={index <= showTillSectionNumber}
                   />
                   <div
@@ -178,7 +190,7 @@ export default class Guide extends React.Component<IGuideProps, IGuideState> {
                       {isLastButton ? 'fin.' : 'Next'}
                     </Button>
                   </div>
-                </React.Fragment>
+                </div>
               );
             })}
           </div>

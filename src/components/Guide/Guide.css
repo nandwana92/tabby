@@ -18,6 +18,21 @@
       padding-top: 128px;
       flex: 1;
 
+      .section-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-self: stretch;
+        opacity: 1;
+        transition-property: opacity;
+        transition-duration: 0.5s;
+        transition-timing-function: ease-in;
+
+        &.less-opaque {
+          opacity: 0.5;
+        }
+      }
+
       .show-next-section-button-container {
         align-self: stretch;
         display: flex;

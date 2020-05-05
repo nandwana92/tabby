@@ -25,6 +25,7 @@ export interface IPlaySomeSongsProps {
   id?: string;
   onDone?: () => void;
   visible?: boolean;
+  done?: boolean;
 }
 
 export interface IPlaySomeSongsState {}
@@ -80,7 +81,7 @@ export class PlaySomeSongs extends React.Component<
         })}
       >
         Let's play some music for this one. Click on some the below songs to
-        play them and come back.
+        play them in the background and come back.
         <ul>
           {songsToPlayForDemo.map((item, index) => {
             return (
