@@ -1,5 +1,5 @@
 {
-  "name": "Tez",
+  "name": "Zet",
   "version": "0.1.0",
   "description": "Supercharge your Chrome experience.",
   "manifest_version": 2,
@@ -8,7 +8,7 @@
     "scripts": ["dist/background.js"],
     "persistent": false
   },
-  "web_accessible_resources": ["images/*.svg", "images/apps/*.svg", "tez.html"],
+  "web_accessible_resources": ["images/*.svg", "images/apps/*.svg", "zet.html"],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "commands": {
     "toggle-visibility": {
@@ -16,7 +16,7 @@
         "default": "Ctrl+Shift+Space",
         "mac": "Command+Shift+Space"
       },
-      "description": "Toggle Tez's visibility"
+      "description": "Toggle Zet's visibility"
     },
     "jump-back-to-previous-tab": {
       "suggested_key": {

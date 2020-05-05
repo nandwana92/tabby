@@ -6,7 +6,7 @@ import Fin from 'src/components/Fin/Fin';
 import ShowOnlyAudibleTabsDemo from 'src/components/ShowOnlyAudibleTabsDemo/ShowOnlyAudibleTabsDemo';
 import PlaySomeSongs from 'src/components/PlaySomeSongs/PlaySomeSongs';
 import SimulatedSearch from 'src/components/SimulatedSearch/SimulatedSearch';
-import OpenTezDemo from 'src/components/OpenTezDemo/OpenTezDemo';
+import OpenZetDemo from 'src/components/OpenZetDemo/OpenZetDemo';
 import OpenWebsitesInBackground from 'src/components/OpenWebsitesInBackground/OpenWebsitesInBackground';
 import Root from 'src/components/Root/Root';
 import { iconUrls } from 'src/constants';
@@ -22,9 +22,9 @@ const sectionComponents: ISectionComponentWithProps[] = [
     },
   },
   {
-    component: OpenTezDemo,
+    component: OpenZetDemo,
     props: {
-      id: 'open-tez-demo',
+      id: 'open-zet-demo',
     },
     manual: true,
     annotationImage: iconUrls.searchInputBoxGuide,

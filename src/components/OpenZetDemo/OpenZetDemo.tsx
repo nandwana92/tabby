@@ -8,28 +8,28 @@ import ConnectedSimulateKeyPresses, {
 import { Key } from 'src/types';
 import { sleep } from 'src/utils';
 
-import styles from './OpenTezDemo.css';
+import styles from './OpenZetDemo.css';
 
-export interface IOpenTezDemoProps {
+export interface IOpenZetDemoProps {
   id?: string;
   onDone?: () => void;
   visible?: boolean;
   done?: boolean;
 }
 
-export interface IOpenTezDemoState {
+export interface IOpenZetDemoState {
   isCommandActive: boolean;
   isShiftActive: boolean;
   isSpaceActive: boolean;
 }
 
-export default class OpenTezDemo extends React.Component<
-  IOpenTezDemoProps,
-  IOpenTezDemoState
+export default class OpenZetDemo extends React.Component<
+  IOpenZetDemoProps,
+  IOpenZetDemoState
 > {
   private simulateKeyPressesRef = createRef<SimulateKeyPresses>();
 
-  constructor(props: IOpenTezDemoProps) {
+  constructor(props: IOpenZetDemoProps) {
     super(props);
 
     this.state = {
@@ -47,7 +47,7 @@ export default class OpenTezDemo extends React.Component<
     }
   }
 
-  componentDidUpdate(prevProps: IOpenTezDemoProps) {
+  componentDidUpdate(prevProps: IOpenZetDemoProps) {
     const { visible = true } = this.props;
     const { visible: prevPropsVisible = true } = prevProps;
 
@@ -62,12 +62,12 @@ export default class OpenTezDemo extends React.Component<
   }
 
   public render() {
-    const { visible, id = 'open-tez-demo', onDone } = this.props;
+    const { visible, id = 'open-zet-demo', onDone } = this.props;
 
     return (
       <div
         id={id}
-        className={cx(styles['open-tez-demo'], {
+        className={cx(styles['open-zet-demo'], {
           [styles['visible']]: visible,
         })}
       >

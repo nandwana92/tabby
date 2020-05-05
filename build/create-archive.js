@@ -8,7 +8,7 @@ const listOfFiles = [
   'manifest.json',
   'how-to-use.html',
   'popup.html',
-  'tez.html',
+  'zet.html',
 ];
 const projectRootDirectory = path.join(__dirname, '..');
 const distDirectoryName = 'dist';

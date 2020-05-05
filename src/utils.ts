@@ -157,13 +157,13 @@ function getInitialReduxState(
   // arrow. So inverting up arrow as a workaround 🤷🏼‍♂️.
   const keyboardShortcuts = [
     {
-      label: `Toggle Tez's visibility`,
+      label: `Toggle Zet's visibility`,
       shortcut: `<kbd>${
         keyLabels[ModifierKey.META][os]
       }</kbd>+<kbd>shift</kbd>+<kbd>space</kbd>`,
     },
     {
-      label: `Close Tez`,
+      label: `Close Zet`,
       shortcut: `<kbd>esc</kbd>`,
     },
     {

@@ -65,7 +65,7 @@ export default class Fin extends React.Component<IFinProps, {}> {
         <a
           className={cx(styles['repo-link'], styles['unstyled-anchor-tag'])}
           target="_blank"
-          href="https://github.com/nandwana92/tez"
+          href="https://github.com/nandwana92/zet"
         >
           GitHub page
         </a>
