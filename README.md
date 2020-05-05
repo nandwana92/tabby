@@ -28,9 +28,11 @@
 ## Screenshots
 
 <img src="https://user-images.githubusercontent.com/36832784/81068702-6bd24080-8efe-11ea-9733-2d68d28c1029.png" width="512">
+
 _Search for an open tab_
 
 <img src="https://user-images.githubusercontent.com/36832784/81068724-77256c00-8efe-11ea-856e-f88475e19611.png" width="512">
+
 _Show currently and recently audible tabs_
 
 ## Setup for local development
