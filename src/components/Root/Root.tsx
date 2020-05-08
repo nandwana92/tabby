@@ -1,5 +1,5 @@
 import { connect, ConnectedProps } from 'react-redux';
-import React from 'react';
+import React, { createRef } from 'react';
 import cx from 'classnames';
 import Fuse from 'fuse.js';
 
@@ -59,6 +59,7 @@ export class Root extends React.Component<TAllProps, IRootState> {
   );
   private fuse = new Fuse<chrome.tabs.Tab, {}>([], fuseOptions);
   private pollingItervalId: NodeJS.Timeout | null = null;
+  private containerRef = createRef<HTMLDivElement>()
 
   constructor(props: TAllProps) {
     super(props);
@@ -300,6 +301,12 @@ export class Root extends React.Component<TAllProps, IRootState> {
             [styles['embed']]: isEmbedded,
           },
         ])}
+        ref={this.containerRef}
+        onClick={e => {
+          if (e.target === this.containerRef.current) {
+            dispatchToggleVisibilityAction()
+          }
+        }}
       >
         <div className={styles['popup']}>
           <SearchBox
