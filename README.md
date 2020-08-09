@@ -7,7 +7,7 @@
 - Gives a familiar macOS Spotlight like interface to quickly jump between tabs across windows.
 - Jump to a tab and quickly return to where you were for replying to that quick message or changing a song.
 - Fuzzy search in all the open tabs across windows. Search on the title or URL of the tabs.
-- Quickly mute-unmute tabs from a filtered down list of tabs which are audible.
+- Quickly mute-unmute tabs from a filtered down list of audible tabs.
 - See the tabs which aren't audible now but were a while back. This is useful for times like when you want to reply to a message you got a couple of minutes back.
 - Highly accessible. Completely navigable usable just your keyboard.
 - Keyboard shortcuts for switching to a tab, toggling mute of a tab, jumping back to the last tab, etc.
