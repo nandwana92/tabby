@@ -1,4 +1,4 @@
-# <img src="https://user-images.githubusercontent.com/36832784/79633193-9ba0ea80-8181-11ea-8f83-893907cc6664.png" height="48" align="left"> Zet
+# <img src="https://user-images.githubusercontent.com/36832784/79633193-9ba0ea80-8181-11ea-8f83-893907cc6664.png" height="48" align="left"> Tabby
 
 > [Chrome extension](https://chrome.google.com/webstore/detail/zet/dpgmcnlebflbgacoghfpdmokolhljmbf) to add power-ups to Chrome.
 
