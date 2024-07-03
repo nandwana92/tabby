@@ -16,8 +16,8 @@
 
 | What?                                   | How?                                                                                                            |
 | --------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Toggle Zet's visibility                 | <kbd>⌘</kbd> + <kbd>shift</kbd> + <kbd>space</kbd>  <br/><kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>space</kbd> |
-| Close Zet                               | <kbd>esc</kbd>                                                                                                  |
+| Toggle Tabby's visibility                 | <kbd>⌘</kbd> + <kbd>shift</kbd> + <kbd>space</kbd>  <br/><kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>space</kbd> |
+| Close Tabby                               | <kbd>esc</kbd>                                                                                                  |
 | Toggle Audible Tabs Only view           | <kbd>⌘</kbd> + <kbd>S</kbd>  <br/><kbd>ctrl</kbd> + <kbd>S</kbd>                                               |
 | Jump back to previous tab               | <kbd>⌘</kbd> + <kbd>shift</kbd> + <kbd>U</kbd>  <br/><kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>U</kbd>         |
 | Jump to nth tab in the results          | <kbd>⌥</kbd> + <kbd>[1-9]</kbd>  <br/><kbd>alt</kbd> + <kbd>[1-9]</kbd></kbd>                                  |
